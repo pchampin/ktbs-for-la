@@ -1,0 +1,47 @@
+{
+  "name": "ktbs-for-la",
+  "version": "0.1.0",
+  "description": "A web app using some `taaabs` components. It helps learning analysts work with a ktbs. See http://tbs-platform.org/tbs/doku.php/tools:ktbs",
+  "keywords": [
+    "web-components",
+    "polymer",
+    "taaabs",
+    "Learning Analysis",
+    "ktbs"
+  ],
+  "authors": [
+    "Rémi Casado"
+  ],
+  "repository": {
+   "type": "git",
+   "url": "https://github.com/TaaabsElements/ktbs-for-la.git"
+  },
+  "main": "ktbs-for-la.html",
+  "license": "https://github.com/TaaabsElements/ktbs-for-la/LICENSE",
+  "dependencies": {
+    "polymer": "Polymer/polymer",
+    "iron-pages": "PolymerElements/iron-pages",
+    "iron-icons": "PolymerElements/iron-icons",
+    "app-layout": "PolymerElements/app-layout",
+    "app-localize-behavior": "PolymerElements/app-localize-behavior",
+    "app-route": "PolymerElements/app-route",
+    "taaabs-taaabs": "TaaabsElements/taaabs-taaabs",
+    "taaabs-resource-loader": "TaaabsElements/taaabs-resource-loader",
+    "taaabs-base-overview": "TaaabsElements/taaabs-base-overview",
+    "taaabs-base-details": "TaaabsElements/taaabs-base-details",
+    "taaabs-base-graph": "TaaabsElements/taaabs-base-graph",
+    "taaabs-themes": "TaaabsElements/taaabs-themes",
+    "taaabs-csv-collector": "TaaabsElements/taaabs-csv-collector",
+    "taaabs-resource-loader": "TaaabsElements/taaabs-resource-loader",
+    "i18n-panel": "TaaabsElements/i18n-panel",
+    "taaabs-trace-details": "TaaabsElements/taaabs-trace-details",
+    "taaabs-trace-timeline": "TaaabsElements/taaabs-trace-timeline",
+    "taaabs-csv-collector": "TaaabsElements/taaabs-csv-collector",
+    "taaabs-spare": "TaaabsElements/taaabs-spare"
+  },
+  "devDependencies": {
+    "iron-component-page": "polymerelements/iron-component-page#^1.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  },
+  "ignore": []
+}

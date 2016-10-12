@@ -34,10 +34,8 @@
     "taaabs-csv-collector": "TaaabsElements/taaabs-csv-collector",
     "taaabs-resource-loader": "TaaabsElements/taaabs-resource-loader",
     "i18n-panel": "TaaabsElements/i18n-panel",
-    "taaabs-trace-details": "TaaabsElements/taaabs-trace-details",
-    "taaabs-trace-timeline": "TaaabsElements/taaabs-trace-timeline",
-    "taaabs-csv-collector": "TaaabsElements/taaabs-csv-collector",
-    "taaabs-spare": "TaaabsElements/taaabs-spare"
+    "taaabs-trace-timeline-docker": "TaaabsElements/taaabs-trace-docker",
+    "taaabs-csv-collector": "TaaabsElements/taaabs-csv-collector"
   },
   "devDependencies": {
     "iron-component-page": "polymerelements/iron-component-page#^1.0.0",

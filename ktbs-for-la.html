@@ -10,8 +10,8 @@
 <link rel="import" href="../i18n-panel/i18n-panel.html">
 <!-- Iron elements -->
 <link rel="import" href="../iron-pages/iron-pages.html">
-<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
 <!-- BASE -->
 <link rel="import" href="../taaabs-base-overview/taaabs-base-overview.html">
 <link rel="import" href="../taaabs-base-details/taaabs-base-details.html">
@@ -19,7 +19,7 @@
 <link rel="import" href="../taaabs-base-create/taaabs-base-create.html">
 <!-- TRACE -->
 <link rel="import" href="../taaabs-trace-details/taaabs-trace-details.html">
-<link rel="import" href="../taaabs-trace-timeline/taaabs-trace-timeline.html">
+<link rel="import" href="../taaabs-trace-timeline-docker/taaabs-trace-timeline-docker.html">
 <!-- COLLECTOR -->
 <link rel="import" href="../taaabs-csv-collector/taaabs-csv-collector.html">
 <!-- REQUESTS -->
@@ -156,8 +156,7 @@
 
         <!-- TAAABS TRACE TIMELINE -->
         <section class="page" data-route="trace-timeline">
-          <taaabs-trace-timeline id="ttt" trace-url="{{_decodeUrl(_routeDatas.resourceurl)}}" language="[[language]]">
-          </taaabs-trace-timeline>
+          <taaabs-trace-timeline-docker id="ttt" trace-url="{{_decodeUrl(_routeDatas.resourceurl)}}" language="[[language]]"></taaabs-trace-timeline-docker>
         </section>
 
         <!-- TAAABS TRACE SPARE -->

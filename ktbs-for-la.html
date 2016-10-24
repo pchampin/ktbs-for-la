@@ -2,7 +2,7 @@
 <link rel="import" href="./css/ktbs-for-la-style.html">
 <!-- POLYMER APP HELPERS -->
 <link rel="import" href="../app-layout/app-layout.html">
-<link rel="import" href="..app-route/app-route.html">
+<link rel="import" href="../app-route/app-route.html">
 <link rel="import" href="../app-route/app-location.html">
 <link rel="import" href="../app-layout/app-scroll-effects/effects/waterfall.html">
 <link rel="import" href="../app-localize-behavior/app-localize-behavior.html">
@@ -18,12 +18,12 @@
 <link rel="import" href="../taaabs-base-graph/taaabs-base-graph.html">
 <link rel="import" href="../taaabs-base-create/taaabs-base-create.html">
 <!-- TRACE -->
-<link rel="import" href="../taaabs-trace-details/taaabs-trace-details.html">
+<!-- <link rel="import" href="../taaabs-trace-details/taaabs-trace-details.html"> -->
 <link rel="import" href="../taaabs-trace-timeline-docker/taaabs-trace-timeline-docker.html">
 <!-- COLLECTOR -->
 <link rel="import" href="../taaabs-csv-collector/taaabs-csv-collector.html">
 <!-- REQUESTS -->
-<link rel="import" href="../taaabs-spare/taaabs-spare.html">
+<!-- <link rel="import" href="../taaabs-spare/taaabs-spare.html"> -->
 <!-- TAAABS -->
 <link rel="import" href="../taaabs-taaabs/taaabs-taaabs.html">
 <link rel="import" href="../taaabs-resource-loader/taaabs-resource-loader.html">
@@ -404,7 +404,7 @@
               this.$.ts.refresh();
               break;
             case 'trace-timeline':
-              this.$.ttt.refresh();
+              this.$.ttt.giveMeEverything();
               break;
           }
         },

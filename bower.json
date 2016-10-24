@@ -33,7 +33,7 @@
     "taaabs-themes": "TaaabsElements/taaabs-themes",
     "taaabs-csv-collector": "TaaabsElements/taaabs-csv-collector",
     "taaabs-resource-loader": "TaaabsElements/taaabs-resource-loader",
-    "i18n-panel": "TaaabsElements/i18n-panel",
+    "i18n-panel": "Yepikae/i18n-panel",
     "taaabs-trace-timeline-docker": "TaaabsElements/taaabs-trace-timeline-docker",
     "taaabs-csv-collector": "TaaabsElements/taaabs-csv-collector"
   },

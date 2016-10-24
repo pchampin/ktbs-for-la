@@ -21,6 +21,7 @@
   "dependencies": {
     "polymer": "Polymer/polymer",
     "iron-pages": "PolymerElements/iron-pages",
+    "iron-icon": "PolymerElements/iron-icon",
     "iron-icons": "PolymerElements/iron-icons",
     "app-layout": "PolymerElements/app-layout",
     "app-localize-behavior": "PolymerElements/app-localize-behavior",

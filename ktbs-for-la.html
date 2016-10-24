@@ -272,7 +272,7 @@
 
         },
         observers: [
-          '_onRoutePathChanged(_route.path)',
+          '_onRoutePathChanged(_routePage.page)',
           '_onRouteDatasChanged(_routeDatas)'
         ],
         behaviors: [
@@ -374,8 +374,11 @@
          */
         _onRoutePathChanged: function(path) {
           // If we do not have an initial URL, we redirect to /home/
-          if (!path || path === '/') {
+          if (!path || path === '') {
             this.set('_route.path', '/home/');
+          }
+          else if(path === 'base-overview'){
+            this.$.tbo.refresh();
           }
           window.scrollTo(0, 0);
         },

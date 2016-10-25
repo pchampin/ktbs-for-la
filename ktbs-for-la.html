@@ -36,9 +36,7 @@
 
     <!-- ROUTING COMPONENT -->
     <app-location route="{{_route}}" use-hash-as-path></app-location>
-    <app-route route="[[_route]]" pattern="/:page" data="{{_routePage}}" tail="{{_tail}}">
-    </app-route>
-    <app-route route="[[_route]]" pattern="/:page/:resourceurl" data="{{_routeDatas}}" tail="{{_routeTails}}">
+    <app-route route="[[_route]]" pattern="/page/:page" data="{{_routePage}}" tail="{{_tail}}">
     </app-route>
 
 
@@ -110,9 +108,9 @@
         <section class="page" data-route="base-details">
           <div class="centered">
             <taaabs-resource-loader resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
-              <taaabs-base-graph id="tbg" taaabs-central-loading height="300px" bg-color="#2e3842" base-url="[[_decodeUrl(_routeDatas.resourceurl)]]" language="[[language]]">
+              <taaabs-base-graph id="tbg" taaabs-central-loading height="300px" bg-color="#2e3842" language="[[language]]">
               </taaabs-base-graph>
-              <taaabs-base-details id="tbd" base-url="[[_decodeUrl(_routeDatas.resourceurl)]]" language="[[language]]" taaabs-central-loading>
+              <taaabs-base-details id="tbd" language="[[language]]" taaabs-central-loading>
               </taaabs-base-details>
             </taaabs-resource-loader>
           </div>
@@ -272,8 +270,7 @@
 
         },
         observers: [
-          '_onRoutePathChanged(_routePage.page)',
-          '_onRouteDatasChanged(_routeDatas)'
+          '_onRoutePathChanged(_routePage)'
         ],
         behaviors: [
           Polymer.AppLocalizeBehavior
@@ -336,7 +333,7 @@
          * @method _home
          */
         _home: function() {
-          this.set('_route.path', '/home/');
+          this.set('_route.path', '/page/home/');
         },
 
         /**
@@ -373,14 +370,47 @@
          * @method _onRoutePathChanged
          */
         _onRoutePathChanged: function(path) {
+
+          /**
+           * Returns an url from the route.
+           */
+          function getResourceUrl(array) {
+            var url = "";
+            var resources = ["StoredTrace", "Base", "ComputedTrace", "TraceModel"];
+            var i = 0;
+            while (i < array.length && resources.indexOf(array[i]) !== -1) {
+              i++;
+              url += array[i] + '/';
+              i++;
+            }
+            url = url.substring(0, url.length - 1);
+            return url;
+          }
+
+          // Delay the route function
+          this.async(function() {
+            var page = path.page;
+            if (this._tail.path) {
+              var tail = this._tail.path.split(/\/\b/g);
+              if (tail[0] === "") tail.splice(0, 1);
+            }
+
+            if (!page || page === '') {
+              this.set('_route.path', '/home/');
+            } else if (page === 'base-overview') {
+              this.$.tbo.refresh();
+            } else if (page === 'base-details') {
+              this.$.tbg.baseUrl = this.$.tbd.baseUrl = this.ktbsUrl + getResourceUrl(tail);
+              this.$.tbg.refresh();
+            } else if (page === 'base-overview') {
+              this.$.tbo.refresh();
+            }
+            window.scrollTo(0, 0);
+
+          }, 150);
+
           // If we do not have an initial URL, we redirect to /home/
-          if (!path || path === '') {
-            this.set('_route.path', '/home/');
-          }
-          else if(path === 'base-overview'){
-            this.$.tbo.refresh();
-          }
-          window.scrollTo(0, 0);
+
         },
 
         /**
@@ -394,8 +424,7 @@
           this.set('_baseUrl', "");
           switch (datas.page) {
             case 'base-details':
-              this.set('_baseUrl', decodeURIComponent(datas.resourceurl));
-              this.$.tbg.refresh();
+
               break;
             case 'csv-collector':
               this.$.tcc.refresh();
@@ -404,6 +433,9 @@
               this.$.ts.refresh();
               break;
             case 'trace-timeline':
+              console.log(this._routeDatas);
+              console.log(this._tail);
+              console.log(this._routeDatas.resourceurl);
               this.$.ttt.giveMeEverything();
               break;
           }

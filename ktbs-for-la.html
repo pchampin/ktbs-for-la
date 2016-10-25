@@ -12,6 +12,7 @@
 <link rel="import" href="../iron-pages/iron-pages.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
 <link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <!-- BASE -->
 <link rel="import" href="../taaabs-base-overview/taaabs-base-overview.html">
 <link rel="import" href="../taaabs-base-details/taaabs-base-details.html">
@@ -73,16 +74,26 @@
       </app-header>
 
       <!-- SECTIONS -->
-      <iron-pages attr-for-selected="data-route" selected="{{_routePage.page}}">
+      <iron-pages attr-for-selected="data-route" selected="[[_routePage.page]]">
 
         <!-- HOME PAGE -->
-        <section class="page" id="home" data-route="home">
-          <div>
-            <h2>KTBS 4 LA</h2>
-            <p>{{localize('welcome')}}</p>
-            <a href="#/base-overview">
-              <div class="button">Let's go!</div>
-            </a>
+        <section class="page" data-route="home">
+          <div id="home" class="flexchild-vertical">
+            <div>
+              <div>
+                <center>
+                  <h2>KTBS 4 LA</h2>
+                  <p>{{localize('welcome')}}</p>
+                </center>
+              </div>
+            </div>
+          </div>
+          <div id="base-list" class="centered swag-scroll">
+            <h2> {{localize('pickAProject')}} </h2>
+            <taaabs-resource-loader resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
+              <taaabs-base-overview id="tbo" ktbs-url="{{ktbsUrl}}" language="[[language]]" taaabs-central-loading>
+              </taaabs-base-overview>
+            </taaabs-resource-loader>
           </div>
         </section>
 
@@ -93,23 +104,23 @@
           </taaabs-resource-loader>
         </section>
 
-        <!-- TAAABS BASE OVERVIEW -->
-        <section class="page" data-route="base-overview">
-          <div class="centered">
-            <h2> {{localize('pickAProject')}} </h2>
-            <taaabs-resource-loader resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
-              <taaabs-base-overview id="tbo" ktbs-url="{{ktbsUrl}}" language="[[language]]" taaabs-central-loading>
-              </taaabs-base-overview>
-            </taaabs-resource-loader>
-          </div>
-        </section>
 
         <!-- TAAABS BASE DETAILS -->
         <section class="page" data-route="base-details">
-          <div class="centered">
+          <div>
+            <iron-collapse id="baseGraphCollapse" opened>
+              <taaabs-resource-loader resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
+                <taaabs-base-graph id="tbg" taaabs-central-loading height="300px" bg-color="#2e3842" language="[[language]]">
+                </taaabs-base-graph>
+              </taaabs-resource-loader>
+            </iron-collapse>
+
+            <div style="width: 100%; cursor: pointer; padding:2px; text-align: center" class="bgDarkBlue fgWhite">
+              <iron-icon id="baseGraphIcon" icon="icons:expand-less" on-click="_onToggleBaseGraph" </iron-icon>
+            </div>
+          </div>
+          <div class="centered swag-scroll flexchild-vertical">
             <taaabs-resource-loader resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
-              <taaabs-base-graph id="tbg" taaabs-central-loading height="300px" bg-color="#2e3842" language="[[language]]">
-              </taaabs-base-graph>
               <taaabs-base-details id="tbd" language="[[language]]" taaabs-central-loading>
               </taaabs-base-details>
             </taaabs-resource-loader>
@@ -283,10 +294,11 @@
 
           // Set event listener for taaabs-base-overview component.
           this.$.tbo.addEventListener('BASE_SELECTED', function(e) {
+            console.log(e);
             if (e.detail.which !== 2) {
-              this.set('_route.path', '/base-details/' + encodeURIComponent(e.detail.baseId));
+              this.set('_route.path', '/page/base-details/Base/' + e.detail.baseId);
             } else {
-              window.open("#/base-details/" + encodeURIComponent(e.detail.baseId));
+              window.open('#/page/base-details/Base/' + e.detail.baseId);
             }
           }.bind(this));
 
@@ -397,7 +409,7 @@
 
             if (!page || page === '') {
               this.set('_route.path', '/home/');
-            } else if (page === 'base-overview') {
+            } else if (page === 'home') {
               this.$.tbo.refresh();
             } else if (page === 'base-details') {
               this.$.tbg.baseUrl = this.$.tbd.baseUrl = this.ktbsUrl + getResourceUrl(tail);
@@ -450,6 +462,11 @@
          */
         _decodeUrl: function(url) {
           return decodeURIComponent(url);
+        },
+
+        _onToggleBaseGraph: function() {
+          (this.$.baseGraphCollapse.opened) ? this.$.baseGraphIcon.set('icon', 'icons:expand-more') : this.$.baseGraphIcon.set('icon', 'icons:expand-less');
+          this.$.baseGraphCollapse.toggle();
         }
       });
     })();

@@ -43,6 +43,7 @@
 
     <app-drawer-layout force-narrow>
 
+
       <!-- MENU DRAWER -->
       <app-drawer id="drawer" align="end">
         <div class="menuHeader">
@@ -114,9 +115,16 @@
                 </taaabs-base-graph>
               </taaabs-resource-loader>
             </iron-collapse>
-
-            <div style="width: 100%; cursor: pointer; padding:2px; text-align: center" class="bgDarkBlue fgWhite">
-              <iron-icon id="baseGraphIcon" icon="icons:expand-less" on-click="_onToggleBaseGraph" </iron-icon>
+            <div style="width: 100%; padding:2px; text-align: center" class="bgDarkBlue fgWhite">
+              <iron-icon id="baseGraphIcon" style="cursor: pointer;" icon="icons:expand-less" on-click="_onToggleBaseGraph" </iron-icon>
+            </div>
+            <div id="base-details-icons">
+              <div> <iron-icon icon="icons:visibility"></iron-icon> </div>
+              <div> <iron-icon icon="icons:file-upload"></iron-icon> </div>
+              <div> <iron-icon icon="icons:add"></iron-icon>B </div>
+              <div> <iron-icon icon="icons:add"></iron-icon>ST </div>
+              <div> <iron-icon icon="icons:add"></iron-icon>CT </div>
+              <div> <iron-icon icon="icons:add"></iron-icon>M </div>
             </div>
           </div>
           <div class="centered swag-scroll flexchild-vertical">
@@ -408,7 +416,7 @@
             }
 
             if (!page || page === '') {
-              this.set('_route.path', '/home/');
+              this.set('_route.path', '/page/home/');
             } else if (page === 'home') {
               this.$.tbo.refresh();
             } else if (page === 'base-details') {
@@ -463,6 +471,10 @@
         _decodeUrl: function(url) {
           return decodeURIComponent(url);
         },
+
+        /**
+        * BASE-DETAILS VIEW FUNCTIONS
+        **/
 
         _onToggleBaseGraph: function() {
           (this.$.baseGraphCollapse.opened) ? this.$.baseGraphIcon.set('icon', 'icons:expand-more') : this.$.baseGraphIcon.set('icon', 'icons:expand-less');

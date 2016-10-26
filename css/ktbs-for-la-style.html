@@ -17,6 +17,7 @@
       :host {
         display: block;
         font-family: 'Open Sans', sans-serif;
+        overflow: hidden;
       }
 
       :host div,
@@ -188,6 +189,35 @@
         text-decoration: inherit;
         outline: 0;
       }
+
+
+      /* //////////// */
+      /* BASE-DETAILS */
+      /* //////////// */
+
+      :host #base-details-icons{
+        width: 100%;
+        padding: 5px;
+        text-align: center;
+        background-color: #455463;
+        color: white;
+      }
+
+      :host #base-details-icons div{
+        display: inline-block;
+        cursor: pointer;
+        padding-left: 10px;
+        padding-right: 10px;
+        border-bottom: solid 1px #2E3842;
+        transition: border-bottom 0.25s ease-in-out;
+      }
+
+      :host #base-details-icons div:hover{
+        border-bottom: solid 1px white;
+      }
+
+
+
       /* //////// */
       /* TOOL BOX */
       /* //////// */

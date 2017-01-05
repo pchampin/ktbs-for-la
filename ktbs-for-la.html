@@ -19,7 +19,8 @@
 <link rel="import" href="../taaabs-base-graph/taaabs-base-graph.html">
 <link rel="import" href="../taaabs-base-create/taaabs-base-create.html">
 <!-- TRACE -->
-<!-- <link rel="import" href="../taaabs-trace-details/taaabs-trace-details.html"> -->
+<!-- TODO CHANGE DEPENDECY HERE -->
+<link rel="import" href="../../elements/taaabs-trace-details/taaabs-trace-details.html">
 <link rel="import" href="../taaabs-trace-timeline-docker/taaabs-trace-timeline-docker.html">
 <!-- COLLECTOR -->
 <link rel="import" href="../taaabs-csv-collector/taaabs-csv-collector.html">
@@ -100,9 +101,11 @@
 
         <!-- TAAABS CSV COLLECTOR -->
         <section class="page" data-route="csv-collector">
-          <taaabs-resource-loader resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
-            <taaabs-csv-collector id="tcc" language="[[language]]" base-url="[[_decodeUrl(_routeDatas.resourceurl)]]" taaabs-central-loading></taaabs-csv-collector>
-          </taaabs-resource-loader>
+          <div>
+            <taaabs-resource-loader resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
+              <taaabs-csv-collector id="tcc" language="[[language]]" taaabs-central-loading></taaabs-csv-collector>
+            </taaabs-resource-loader>
+          </div>
         </section>
 
 
@@ -119,15 +122,23 @@
               <iron-icon id="baseGraphIcon" style="cursor: pointer;" icon="icons:expand-less" on-click="_onToggleBaseGraph" </iron-icon>
             </div>
             <div id="base-details-icons">
-              <div> <iron-icon icon="icons:visibility"></iron-icon> </div>
-              <div> <iron-icon icon="icons:file-upload"></iron-icon> </div>
-              <div> <iron-icon icon="icons:add"></iron-icon>B </div>
-              <div> <iron-icon icon="icons:add"></iron-icon>ST </div>
-              <div> <iron-icon icon="icons:add"></iron-icon>CT </div>
-              <div> <iron-icon icon="icons:add"></iron-icon>M </div>
+              <div>
+                <iron-icon icon="icons:visibility"></iron-icon>
+              </div>
+              <div>
+                <iron-icon icon="icons:file-upload" title="{{localize('importcsv')}}" on-click="_onImportCSVClicked"></iron-icon>
+              </div>
+              <div>
+                <iron-icon icon="icons:add"></iron-icon>B </div>
+              <div>
+                <iron-icon icon="icons:add"></iron-icon>ST </div>
+              <div>
+                <iron-icon icon="icons:add"></iron-icon>CT </div>
+              <div>
+                <iron-icon icon="icons:add"></iron-icon>M </div>
             </div>
           </div>
-          <div class="centered swag-scroll flexchild-vertical">
+          <div style="padding-top: 5px;" class="centered swag-scroll flexchild-vertical">
             <taaabs-resource-loader resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
               <taaabs-base-details id="tbd" language="[[language]]" taaabs-central-loading>
               </taaabs-base-details>
@@ -147,7 +158,7 @@
               </a>
             </div>
             <div class="toolLink fgWhite">
-              <a href="#/trace-timeline/{{_routeDatas.resourceurl}}" target="_blank">
+              <a href="#/page/trace-timeline{{_tail.path}}" target="_blank">
                 <div><img src="{{resolveUrl('./images/logoTimeline.svg')}}"></img>
                 </div>
                 <div>TIMELINE</div>
@@ -173,7 +184,7 @@
 
         <!-- TAAABS TRACE TIMELINE -->
         <section class="page" data-route="trace-timeline">
-          <taaabs-trace-timeline-docker id="ttt" trace-url="{{_decodeUrl(_routeDatas.resourceurl)}}" language="[[language]]"></taaabs-trace-timeline-docker>
+          <taaabs-trace-timeline-docker id="ttt" language="[[language]]"></taaabs-trace-timeline-docker>
         </section>
 
         <!-- TAAABS TRACE SPARE -->
@@ -304,9 +315,9 @@
           this.$.tbo.addEventListener('BASE_SELECTED', function(e) {
             console.log(e);
             if (e.detail.which !== 2) {
-              this.set('_route.path', '/page/base-details/Base/' + e.detail.baseId);
+              this.set('_route.path', '/page/base-details/path/' + e.detail.baseId);
             } else {
-              window.open('#/page/base-details/Base/' + e.detail.baseId);
+              window.open('#/page/base-details/path/' + e.detail.baseId);
             }
           }.bind(this));
 
@@ -323,15 +334,27 @@
             // .resource
             if (e.detail.resource['@type'] === "StoredTrace") {
               if (e.detail.which !== 2) {
-                this.set('_route.path', '/trace-details/' + encodeURIComponent(e.detail.resource.uri));
+                // Get the path to the base
+                var url = "";
+                // Get the path to the base
+                var url = "";
+                var source_url = e.detail.resource.uri.replace(this.ktbsUrl, '');
+                url = 'path/' + source_url;
+                  // Set the enw route
+                this.set('_route.path', '/page/trace-details/' + url);
               } else {
-                window.open("#/trace-details/" + encodeURIComponent(e.detail.resource.uri));
+                window.open('#/page/trace-details/' + url);
               }
             } else if (e.detail.resource['@type'] === "Base") {
               if (e.detail.which !== 2) {
-                this.set('_route.path', '/base-details/' + encodeURIComponent(e.detail.resource.uri));
+                // Get the path to the base
+                var url = "";
+                var source_url = e.detail.resource.uri.replace(this.ktbsUrl, '');
+                url = 'path/' + source_url;
+                  // Set the enw route
+                this.set('_route.path', '/page/base-details/' + url);
               } else {
-                window.open("#/base-details/" + encodeURIComponent(e.detail.resource.uri));
+                window.open('#/page/base-details/' + url);
               }
             }
 
@@ -371,16 +394,29 @@
          * @method _onImportCSVClicked
          */
         _onImportCSVClicked: function() {
-          if (this._baseUrl !== "") {
-            this.set('_route.path', '/csv-collector/' + encodeURIComponent(this._baseUrl));
-          } else {
-            this.set('_route.path', '/base-overview');
-          }
+          var tail = this._tail.path;
+          this.set('_route.path', '/page/csv-collector' + tail);
         },
 
         ///////////////////////
         // ROUTING FUNCTIONS //
         ///////////////////////
+
+        /**
+         * Returns an url from the route.
+         */
+        _getResourceUrl: function(array) {
+          var url = "";
+          var resources = ["path"];
+          var i = 0;
+          while (i < array.length) {
+            if(array[i] !== "path")
+            url += array[i] + '/';
+            i++;
+          }
+          url = url.substring(0, url.length - 1);
+          return url;
+        },
 
         /**
          * `_route.path` observer function.
@@ -390,22 +426,6 @@
          * @method _onRoutePathChanged
          */
         _onRoutePathChanged: function(path) {
-
-          /**
-           * Returns an url from the route.
-           */
-          function getResourceUrl(array) {
-            var url = "";
-            var resources = ["StoredTrace", "Base", "ComputedTrace", "TraceModel"];
-            var i = 0;
-            while (i < array.length && resources.indexOf(array[i]) !== -1) {
-              i++;
-              url += array[i] + '/';
-              i++;
-            }
-            url = url.substring(0, url.length - 1);
-            return url;
-          }
 
           // Delay the route function
           this.async(function() {
@@ -420,10 +440,17 @@
             } else if (page === 'home') {
               this.$.tbo.refresh();
             } else if (page === 'base-details') {
-              this.$.tbg.baseUrl = this.$.tbd.baseUrl = this.ktbsUrl + getResourceUrl(tail);
+              this.$.tbg.baseUrl = this.$.tbd.baseUrl = this.ktbsUrl + this._getResourceUrl(tail);
               this.$.tbg.refresh();
             } else if (page === 'base-overview') {
               this.$.tbo.refresh();
+            } else if (page === 'trace-timeline') {
+              this.$.ttt.set('traceUrl', this.ktbsUrl + this._getResourceUrl(tail));
+              this.$.ttt.giveMeEverything();
+            } else if (page === 'csv-collector') {
+              this.$.tcc.baseUrl = this.ktbsUrl + this._getResourceUrl(tail);
+              console.log(this.$.tcc.baseUrl);
+              this.$.tcc.refresh();
             }
             window.scrollTo(0, 0);
 
@@ -431,34 +458,6 @@
 
           // If we do not have an initial URL, we redirect to /home/
 
-        },
-
-        /**
-         * `_routeDatas` observer function.
-         *
-         * @param {!required} path {String} '_routeDatas'.
-         *
-         * @method _onRouteDatasChanged
-         */
-        _onRouteDatasChanged: function(datas) {
-          this.set('_baseUrl', "");
-          switch (datas.page) {
-            case 'base-details':
-
-              break;
-            case 'csv-collector':
-              this.$.tcc.refresh();
-              break;
-            case 'spare':
-              this.$.ts.refresh();
-              break;
-            case 'trace-timeline':
-              console.log(this._routeDatas);
-              console.log(this._tail);
-              console.log(this._routeDatas.resourceurl);
-              this.$.ttt.giveMeEverything();
-              break;
-          }
         },
 
         /**
@@ -473,11 +472,11 @@
         },
 
         /**
-        * BASE-DETAILS VIEW FUNCTIONS
-        **/
+         * BASE-DETAILS VIEW FUNCTIONS
+         **/
 
         _onToggleBaseGraph: function() {
-          (this.$.baseGraphCollapse.opened) ? this.$.baseGraphIcon.set('icon', 'icons:expand-more') : this.$.baseGraphIcon.set('icon', 'icons:expand-less');
+          (this.$.baseGraphCollapse.opened) ? this.$.baseGraphIcon.set('icon', 'icons:expand-more'): this.$.baseGraphIcon.set('icon', 'icons:expand-less');
           this.$.baseGraphCollapse.toggle();
         }
       });

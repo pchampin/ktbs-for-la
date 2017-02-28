@@ -25,15 +25,19 @@
 <!-- COLLECTOR -->
 <link rel="import" href="../taaabs-csv-collector/taaabs-csv-collector.html">
 <!-- REQUESTS -->
-<!-- <link rel="import" href="../taaabs-spare/taaabs-spare.html"> -->
+<link rel="import" href="../../elements/taaabs-spare/taaabs-spare.html">
 <!-- TAAABS -->
 <link rel="import" href="../taaabs-taaabs/taaabs-taaabs.html">
 <link rel="import" href="../taaabs-resource-loader/taaabs-resource-loader.html">
+<link rel="import" href="./css/ktbs-for-la-style.html">
+<link rel="import" href="../taaabs-themes/taaabs-theme.html">
+<link rel="import" href="../notify-toast-behavior/notify-toast-behavior.html">
 <!-- POLYMER -->
 <link rel="import" href="../polymer/polymer.html">
 <!-- ENOUGH WITH THE DEPENDENCIES !! -->
 <dom-module id="ktbs-for-la">
   <template>
+    <style include="taaabs-theme"></style>
     <style include="ktbs-for-la-style"></style>
 
     <!-- ROUTING COMPONENT -->
@@ -47,20 +51,23 @@
 
       <!-- MENU DRAWER -->
       <app-drawer id="drawer" align="end">
-        <div class="menuHeader">
+        <div class="fgWhite menuHeader">
           <h3>MENU</h3>
         </div>
-        <div class="menuDiv">
+        <div class="fgWhite fgWhiteH clickable hoverable menuDiv">
           <a href="#/base-overview">{{localize('projects')}}</a>
         </div>
-        <div class="menuDiv" on-click="_onImportCSVClicked">
-          {{localize('importcsv')}}
+        <div class="fgWhite fgWhiteH clickable hoverable menuDiv" on-click="_onImportCSVClicked">
+          [[localize('importcsv')]]
+          <iron-icon icon='icons:file-upload' class="small" style="float:right; vertical-align:text-bottom"></iron-icon>
         </div>
-        <div class="menuDiv">
-          {{localize('settings')}}
+        <div class="fgWhite fgWhiteH clickable hoverable menuDiv">
+          [[localize('settings')]]
+          <iron-icon icon='icons:settings' class="tiny" style="float:right; vertical-align:text-bottom"></iron-icon>
         </div>
-        <div class="menuDiv">
-          {{localize('help')}}
+        <div class="fgWhite fgWhiteH clickable hoverable menuDiv">
+          [[localize('help')]]
+          <iron-icon icon='icons:help-outline' class="tiny" style="float:right; vertical-align:text-bottom"></iron-icon>
         </div>
         <div>
           <i18n-panel style="float:right" language="{{language}}"></i18n-panel>
@@ -69,11 +76,14 @@
 
       <!-- HEADER TOOLBAR -->
       <app-header fixed>
-        <app-toolbar>
-          <div id="homeBtn" on-click="_home">KTBS4LA</div>
-          <iron-icon id="drawerBtn" icon="icons:menu" on-click='_toggleDrawer'></iron-icon>
+        <app-toolbar >
+          <div id="homeBtn" class="fgWhite fgWhiteH clickable hoverable" on-click="_home">KTBS4LA</div>
+          <iron-icon id="drawerBtn" class="fgWhite fgWhiteH clickable hoverable" icon="icons:menu" on-click='_toggleDrawer'></iron-icon>
         </app-toolbar>
       </app-header>
+
+      <!-- Notify toast -->
+      <paper-toast id="__notify_toast__" style="background-color:rgba(0,0,0,0.37)" duration=0> </paper-toast>
 
       <!-- SECTIONS -->
       <iron-pages attr-for-selected="data-route" selected="[[_routePage.page]]">
@@ -110,7 +120,7 @@
 
 
         <!-- TAAABS BASE DETAILS -->
-        <section class="page" data-route="base-details">
+        <section class="page fit-width flex-vertical" data-route="base-details">
           <div>
             <iron-collapse id="baseGraphCollapse" opened>
               <taaabs-resource-loader resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
@@ -118,32 +128,36 @@
                 </taaabs-base-graph>
               </taaabs-resource-loader>
             </iron-collapse>
-            <div style="width: 100%; padding:2px; text-align: center" class="bgDarkBlue fgWhite">
-              <iron-icon id="baseGraphIcon" style="cursor: pointer;" icon="icons:expand-less" on-click="_onToggleBaseGraph" </iron-icon>
+            <div class="fit-width bgDarkBlue" style="padding:2px; text-align: center">
+              <iron-icon id="baseGraphIcon" class="clickable hoverable fgWhite fgWhiteH" icon="icons:expand-less" on-click="_onToggleBaseGraph"> </iron-icon>
             </div>
-            <div id="base-details-icons">
-              <div>
-                <iron-icon icon="icons:visibility"></iron-icon>
+            <div id="base-details-icons" class="fit-width bgDarkBlue">
+              <div class="centered flex-horizontal flex-equal-around-justified">
+                <div class="fgWhite fgWhiteH hoverable clickable">
+                  <iron-icon class="fgWhiteH hoverable" icon="icons:file-upload" title="{{localize('importcsv')}}" on-click="_onImportCSVClicked"></iron-icon>
+                </div>
+                <div class="fgWhite fgWhiteH hoverable clickable" on-click='_onCreateBaseClick'>
+                  <iron-icon class="fgWhiteH hoverable" icon="icons:add" style="vertical-align:baseline"></iron-icon>B </div>
+                <div class="fgWhite fgWhiteH hoverable clickable">
+                  <iron-icon class="fgWhiteH hoverable" icon="icons:add" style="vertical-align:baseline"></iron-icon>ST </div>
+                <div class="fgWhite fgWhiteH hoverable clickable">
+                  <iron-icon class="fgWhiteH hoverable" icon="icons:add" style="vertical-align:baseline"></iron-icon>CT </div>
+                <div class="fgWhite fgWhiteH hoverable clickable">
+                  <iron-icon class="fgWhiteH hoverable" icon="icons:add" style="vertical-align:baseline"></iron-icon>M </div>
               </div>
-              <div>
-                <iron-icon icon="icons:file-upload" title="{{localize('importcsv')}}" on-click="_onImportCSVClicked"></iron-icon>
-              </div>
-              <div>
-                <iron-icon icon="icons:add"></iron-icon>B </div>
-              <div>
-                <iron-icon icon="icons:add"></iron-icon>ST </div>
-              <div>
-                <iron-icon icon="icons:add"></iron-icon>CT </div>
-              <div>
-                <iron-icon icon="icons:add"></iron-icon>M </div>
             </div>
           </div>
-          <div style="padding-top: 5px;" class="centered swag-scroll flexchild-vertical">
+          <div style="padding-top: 5px;" class="centered swag-scroll flexchild">
             <taaabs-resource-loader resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
               <taaabs-base-details id="tbd" language="[[language]]" taaabs-central-loading>
               </taaabs-base-details>
             </taaabs-resource-loader>
           </div>
+          <paper-dialog id="base-create-modal" style="min-width: 800px; padding:24px" no-cancel-on-esc-key no-cancel-on-outside-click>
+            <taaabs-resource-loader resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
+              <taaabs-base-create id="base-create" language="[[language]]" in-base  taaabs-central-loading></taaabs-base-create>
+            </taaabs-resource-loader>
+          </paper-dialog>
         </section>
 
         <!-- TAAABS TRACE DETAILS -->
@@ -151,7 +165,7 @@
           <!-- THE TOOLS LINKS -->
           <div class="toolBox bgDarkBlue">
             <div class="toolLink fgWhite">
-              <a href="#/spare/{{_routeDatas.resourceurl}}" target="_blank">
+              <a href="#/page/spare{{_tail.path}}" target="_blank">
                 <div><img src="{{resolveUrl('./images/logoSpare.svg')}}"></img>
                 </div>
                 <div>SPARE</div>
@@ -166,9 +180,9 @@
             </div>
           </div>
           <!-- THE TRACE DETAILS -->
-          <div class="centered">
+          <div>
             <taaabs-resource-loader resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
-              <taaabs-trace-details id="ttd" trace-url="{{_decodeUrl(_routeDatas.resourceurl)}}" language="[[language]]">
+              <taaabs-trace-details id="ttd" language="[[language]]" taaabs-central-loading>
               </taaabs-trace-details>
             </taaabs-resource-loader>
           </div>
@@ -191,7 +205,7 @@
         <section class="page" data-route="spare">
           <div class="centered">
             <taaabs-resource-loader resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
-              <taaabs-spare id="ts" taaabs-central-loading trace-url="{{_decodeUrl(_routeDatas.resourceurl)}}" language="[[language]]">
+              <taaabs-spare id="ts" taaabs-central-loading language="[[language]]">
               </taaabs-spare>
             </taaabs-resource-loader>
           </div>
@@ -303,7 +317,8 @@
           '_onRoutePathChanged(_routePage)'
         ],
         behaviors: [
-          Polymer.AppLocalizeBehavior
+          Polymer.AppLocalizeBehavior,
+          NotifyToastBehavior
         ],
         ready: function() {},
 
@@ -340,7 +355,7 @@
                 var url = "";
                 var source_url = e.detail.resource.uri.replace(this.ktbsUrl, '');
                 url = 'path/' + source_url;
-                  // Set the enw route
+                // Set the enw route
                 this.set('_route.path', '/page/trace-details/' + url);
               } else {
                 window.open('#/page/trace-details/' + url);
@@ -351,7 +366,7 @@
                 var url = "";
                 var source_url = e.detail.resource.uri.replace(this.ktbsUrl, '');
                 url = 'path/' + source_url;
-                  // Set the enw route
+                // Set the enw route
                 this.set('_route.path', '/page/base-details/' + url);
               } else {
                 window.open('#/page/base-details/' + url);
@@ -364,11 +379,37 @@
             this.$.tbg.refresh();
           }.bind(this));
 
+          this.$['base-create'].addEventListener('base-creation-canceled', function(){
+            this.$['base-create-modal'].close();
+          }.bind(this));
+
+          this.$['base-create'].addEventListener('base-created', function(evt){
+            this.$['base-create-modal'].close();
+            var msg = this.localize('base-creation-success-1') + evt.detail.base_path + this.localize('base-creation-success-2');
+            this.notifyToast(msg,{
+              type: "Success",
+              timeout: -1
+            });
+            this.$.tbg.refresh();
+          }.bind(this));
+
         },
 
         //////////////////////////////
         // USER INTERFACE FUNCTIONS //
         //////////////////////////////
+
+        _onCreateBaseClick: function(){
+          var tail = "";
+          if (this._tail.path) {
+            tail = this._tail.path.split(/\/\b/g);
+            if (tail[0] === "") tail.splice(0, 1);
+          }
+          this.$['base-create'].set('baseRelativeUrl', this._getResourceUrl(tail));
+          this.$['base-create'].set('baseUrl', this.ktbsUrl + this._getResourceUrl(tail));
+          this.$['base-create'].refresh();
+          this.$['base-create-modal'].open();
+        },
 
         /**
          * `#homeBtn` on-click function.
@@ -410,8 +451,8 @@
           var resources = ["path"];
           var i = 0;
           while (i < array.length) {
-            if(array[i] !== "path")
-            url += array[i] + '/';
+            if (array[i] !== "path")
+              url += array[i] + '/';
             i++;
           }
           url = url.substring(0, url.length - 1);
@@ -446,11 +487,16 @@
               this.$.tbo.refresh();
             } else if (page === 'trace-timeline') {
               this.$.ttt.set('traceUrl', this.ktbsUrl + this._getResourceUrl(tail));
-              this.$.ttt.giveMeEverything();
+              this.$.ttt.refresh();
+            } else if (page === 'spare') {
+              this.$.ts.set('traceUrl', this.ktbsUrl + this._getResourceUrl(tail));
+              this.$.ts.refresh();
             } else if (page === 'csv-collector') {
               this.$.tcc.baseUrl = this.ktbsUrl + this._getResourceUrl(tail);
-              console.log(this.$.tcc.baseUrl);
               this.$.tcc.refresh();
+            } else if (page === 'trace-details') {
+              this.$.ttd.traceUrl = this.ktbsUrl + this._getResourceUrl(tail);
+              this.$.ttd.refresh();
             }
             window.scrollTo(0, 0);
 

@@ -5,7 +5,9 @@
         "importcsv": "Import csv traces",
         "settings" : "Settings",
         "help": "Help",
-        "pickAProject": "Pick your project"
+        "pickAProject": "Pick your project",
+        "base-creation-success-1": "The new ktbs base was successfully created. Click <a href=\"#/page/base-details/path/",
+        "base-creation-success-2": " target=\"_blank\">here</a> to inspect the new base."
     },
     "fr": {
         "welcome": "Une toute nouvelle façon d'analyser vos traces d'EIAH , par l 'intermédiaire d'un système à base de traces.",
@@ -13,6 +15,8 @@
         "importcsv": "Importer des traces csv",
         "settings": "Réglages",
         "help": "Aide",
-        "pickAProject": "Selectionnez votre project"
+        "pickAProject": "Selectionnez votre project",
+        "base-creation-success-1": "La nouvelle base ktbs vient d'être créée. Clickez <a href=\"#/page/base-details/path/",
+        "base-creation-success-2": "\" target=\"_blank\">ici</a> pour visualiser la nouvelle base."
     }
 }

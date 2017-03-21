@@ -20,7 +20,7 @@
 <link rel="import" href="../taaabs-base-create/taaabs-base-create.html">
 <!-- TRACE -->
 <!-- TODO CHANGE DEPENDECY HERE -->
-<link rel="import" href="../../elements/taaabs-trace-details/taaabs-trace-details.html">
+<link rel="import" href="../../elements/taaabs-trace-details-container/taaabs-trace-details-container.html">
 <link rel="import" href="../taaabs-trace-timeline-docker/taaabs-trace-timeline-docker.html">
 <!-- COLLECTOR -->
 <link rel="import" href="../taaabs-csv-collector/taaabs-csv-collector.html">
@@ -162,30 +162,10 @@
 
         <!-- TAAABS TRACE DETAILS -->
         <section class="page" data-route="trace-details">
-          <!-- THE TOOLS LINKS -->
-          <div class="toolBox bgDarkBlue">
-            <div class="toolLink fgWhite">
-              <a href="#/page/spare{{_tail.path}}" target="_blank">
-                <div><img src="{{resolveUrl('./images/logoSpare.svg')}}"></img>
-                </div>
-                <div>SPARE</div>
-              </a>
-            </div>
-            <div class="toolLink fgWhite">
-              <a href="#/page/trace-timeline{{_tail.path}}" target="_blank">
-                <div><img src="{{resolveUrl('./images/logoTimeline.svg')}}"></img>
-                </div>
-                <div>TIMELINE</div>
-              </a>
-            </div>
-          </div>
-          <!-- THE TRACE DETAILS -->
-          <div>
-            <taaabs-resource-loader resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
-              <taaabs-trace-details id="ttd" language="[[language]]" taaabs-central-loading>
-              </taaabs-trace-details>
-            </taaabs-resource-loader>
-          </div>
+          <taaabs-resource-loader style="width: 100%; height: 100%" resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
+            <taaabs-trace-details-container id="trace-details-container" language="[[language]]" taaabs-central-loading>
+            </taaabs-trace-details-container>
+          </taaabs-resource-loader>
         </section>
 
         <!-- WORK IN PROGRESS -->
@@ -345,9 +325,8 @@
           this.$.tbd.addEventListener('RESOURCE_SELECTED', function(e) {
 
             // this.$.baseDetailsModal.open();
-
             // .resource
-            if (e.detail.resource['@type'] === "StoredTrace") {
+            if (e.detail.resource['@type'] === "StoredTrace" || e.detail.resource['@type'] === "ComputedTrace") {
               if (e.detail.which !== 2) {
                 // Get the path to the base
                 var url = "";
@@ -392,6 +371,10 @@
             });
             this.$.tbg.refresh();
           }.bind(this));
+
+          this.$['trace-details-container'].addEventListener('timeline-link-clicked', function(){
+            window.open('#/page/trace-timeline' + this._tail.path);
+          }.bind(this))
 
         },
 
@@ -495,8 +478,8 @@
               this.$.tcc.baseUrl = this.ktbsUrl + this._getResourceUrl(tail);
               this.$.tcc.refresh();
             } else if (page === 'trace-details') {
-              this.$.ttd.traceUrl = this.ktbsUrl + this._getResourceUrl(tail);
-              this.$.ttd.refresh();
+              this.$['trace-details-container'].traceUrl = this.ktbsUrl + this._getResourceUrl(tail);
+              this.$['trace-details-container'].refresh();
             }
             window.scrollTo(0, 0);
 

@@ -18,6 +18,8 @@
 <link rel="import" href="../taaabs-base-details/taaabs-base-details.html">
 <link rel="import" href="../taaabs-base-graph/taaabs-base-graph.html">
 <link rel="import" href="../taaabs-base-create/taaabs-base-create.html">
+<!-- TODO : METHOD -->
+<!-- <link rel="import" href="../taaabs-method-details/taaabs-method-details.html"> -->
 <!-- TRACE -->
 <!-- TODO CHANGE DEPENDECY HERE -->
 <link rel="import" href="../taaabs-trace-details-container/taaabs-trace-details-container.html">
@@ -179,6 +181,11 @@
         <!-- TAAABS TRACE TIMELINE -->
         <section class="page" data-route="trace-timeline">
           <taaabs-trace-timeline-docker id="ttt" language="[[language]]"></taaabs-trace-timeline-docker>
+        </section>
+
+        <!-- TAAABS METHOD DETAILS -->
+        <section class="page" data-route="method-details">
+          <taaabs-method-details id="method-details" language="[[language]]"></taaabs-method-details>
         </section>
 
         <!-- TAAABS TRACE SPARE -->
@@ -350,6 +357,17 @@
               } else {
                 window.open('#/page/base-details/' + url);
               }
+            } else if (e.detail.resource['@type'] === "Method") {
+              if (e.detail.which !== 2) {
+                // Get the path to the base
+                var url = "";
+                var source_url = e.detail.resource.uri.replace(this.ktbsUrl, '');
+                url = 'path/' + source_url;
+                // Set the enw route
+                this.set('_route.path', '/page/method-details/' + url);
+              } else {
+                window.open('#/page/method-details/' + url);
+              }
             }
 
           }.bind(this));
@@ -461,28 +479,41 @@
 
             if (!page || page === '') {
               this.set('_route.path', '/page/home/');
-            } else if (page === 'home') {
-              this.$.tbo.refresh();
-            } else if (page === 'base-details') {
-              this.$.tbg.baseUrl = this.$.tbd.baseUrl = this.ktbsUrl + this._getResourceUrl(tail);
-              this.$.tbg.refresh();
-            } else if (page === 'base-overview') {
-              this.$.tbo.refresh();
-            } else if (page === 'trace-timeline') {
-              this.$.ttt.set('traceUrl', this.ktbsUrl + this._getResourceUrl(tail));
-              this.$.ttt.refresh();
-            } else if (page === 'spare') {
-              this.$.ts.set('traceUrl', this.ktbsUrl + this._getResourceUrl(tail));
-              this.$.ts.refresh();
-            } else if (page === 'csv-collector') {
-              this.$.tcc.baseUrl = this.ktbsUrl + this._getResourceUrl(tail);
-              this.$.tcc.refresh();
-            } else if (page === 'trace-details') {
-              this.$['trace-details-container'].traceUrl = this.ktbsUrl + this._getResourceUrl(tail);
-              this.$['trace-details-container'].refresh();
+            }
+
+            if(this._tail.path !== this._lastPath || page !== this._lastPage){
+
+              this.set('_lastPath', this._tail.path);
+              this.set('_lastPage', page);
+
+              if (!page || page === '') {
+                this.set('_route.path', '/page/home/');
+              } else if (page === 'home') {
+                this.$.tbo.refresh();
+              } else if (page === 'base-details') {
+                this.$.tbg.baseUrl = this.$.tbd.baseUrl = this.ktbsUrl + this._getResourceUrl(tail);
+                this.$.tbg.refresh();
+              } else if (page === 'base-overview') {
+                this.$.tbo.refresh();
+              } else if (page === 'trace-timeline') {
+                this.$.ttt.set('traceUrl', this.ktbsUrl + this._getResourceUrl(tail));
+                this.$.ttt.refresh();
+              } else if (page === 'spare') {
+                this.$.ts.set('traceUrl', this.ktbsUrl + this._getResourceUrl(tail));
+                this.$.ts.refresh();
+              } else if (page === 'csv-collector') {
+                this.$.tcc.baseUrl = this.ktbsUrl + this._getResourceUrl(tail);
+                this.$.tcc.refresh();
+              } else if (page === 'trace-details') {
+                this.$['trace-details-container'].traceUrl = this.ktbsUrl + this._getResourceUrl(tail);
+                this.$['trace-details-container'].refresh();
+              } else if (page === 'method-details') {
+                // TODO
+                // this.$['method-details'].methodUrl = this.ktbsUrl + this._getResourceUrl(tail);
+                // this.$['method-details'].refresh();
+              }
             }
             window.scrollTo(0, 0);
-
           }, 150);
 
           // If we do not have an initial URL, we redirect to /home/

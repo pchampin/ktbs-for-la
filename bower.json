@@ -36,6 +36,7 @@
     "i18n-panel": "Yepikae/i18n-panel",
     "taaabs-trace-timeline-docker": "TaaabsElements/taaabs-trace-timeline-docker",
     "taaabs-csv-collector": "TaaabsElements/taaabs-csv-collector",
+    "taaabs-research": "TaaabsElements/taaabs-research",
     "taaabs-trace-details-container": "TaaabsElements/taaabs-trace-details-container"
   },
   "devDependencies": {

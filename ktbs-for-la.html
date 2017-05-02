@@ -13,13 +13,15 @@
 <link rel="import" href="../iron-icon/iron-icon.html">
 <link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
 <!-- BASE -->
 <link rel="import" href="../taaabs-base-overview/taaabs-base-overview.html">
 <link rel="import" href="../taaabs-base-details/taaabs-base-details.html">
 <link rel="import" href="../taaabs-base-graph/taaabs-base-graph.html">
 <link rel="import" href="../taaabs-base-create/taaabs-base-create.html">
+<link rel="import" href="../taaabs-research/taaabs-research.html">
 <!-- TODO : METHOD -->
-<!-- <link rel="import" href="../taaabs-method-details/taaabs-method-details.html"> -->
+<link rel="import" href="../taaabs-method-details/taaabs-method-details.html">
 <!-- TRACE -->
 <!-- TODO CHANGE DEPENDECY HERE -->
 <link rel="import" href="../taaabs-trace-details-container/taaabs-trace-details-container.html">
@@ -59,6 +61,10 @@
         <div class="fgWhite fgWhiteH clickable hoverable menuDiv">
           <a href="#/base-overview">{{localize('projects')}}</a>
         </div>
+        <div class="fgWhite fgWhiteH clickable hoverable menuDiv" on-click="_onSearchClick">
+          [[localize('search')]]
+          <iron-icon icon='icons:search' class="small" style="float:right; vertical-align:text-bottom"></iron-icon>
+        </div>
         <div class="fgWhite fgWhiteH clickable hoverable menuDiv" on-click="_onImportCSVClicked">
           [[localize('importcsv')]]
           <iron-icon icon='icons:file-upload' class="small" style="float:right; vertical-align:text-bottom"></iron-icon>
@@ -83,6 +89,16 @@
           <iron-icon id="drawerBtn" class="fgWhite fgWhiteH clickable hoverable" icon="icons:menu" on-click='_toggleDrawer'></iron-icon>
         </app-toolbar>
       </app-header>
+
+      <paper-dialog id="research-dialog">
+        <div class="flex-vertical">
+          <taaabs-research id="research" style="width: 1000px; min-height: 400px" ktbs-url="[[ktbsUrl]]" language="[[language]]"></taaabs-research>
+          <div class="flex-horizontal flex-equal-around-justified">
+            <paper-button class="fgWhite bgLog bgLogH hoverable" raised on-click="_onExploreHereClick">Explore here <iron-icon icon="icons:open-in-new"></iron-icon></paper-button>
+            <paper-button class="fgWhite bgLog bgLogH hoverable" raised on-click="_onExploreNewWindowClick">Explore in new window <iron-icon icon="icons:open-in-browser"></iron-icon></paper-button>
+          </div>
+        </div>
+      </paper-dialog>
 
       <!-- Notify toast -->
       <paper-toast id="__notify_toast__" style="background-color:rgba(0,0,0,0.37)" duration=0> </paper-toast>
@@ -412,6 +428,60 @@
           this.$['base-create-modal'].open();
         },
 
+        _onSearchClick: function(){
+          this.$['research-dialog'].open();
+        },
+
+        _onExploreHereClick: function(){
+          var url = this.$.research.get('resourceUrl');
+          url.replace(this.ktbsUrl, '');
+          var type = this.$.research.get('resource')['@type'];
+          var path = "/page/";
+          if(type === "Base"){
+            path += 'base-details/path/'+url;
+          }
+          else if(type === "TraceModel"){
+            // TODO Compelte with model page
+            return;
+          }
+          else if(type === "StoredTrace" || type === "ComputedTrace"){
+            path += 'trace-details/path/'+url;
+          }
+          else if(type=== "Method"){
+            path += 'method-details/path/'+url;
+          }
+          else{
+            return;
+          }
+          this.set('_route.path', path);
+          this.$['research-dialog'].close();
+          this.$.drawer.toggle();
+        },
+
+        _onExploreNewWindowClick: function(){
+          var url = this.$.research.get('resourceUrl');
+          url.replace(this.ktbsUrl, '');
+          var type = this.$.research.get('resource')['@type'];
+          var path = "/page/";
+          if(type === "Base"){
+            path += 'base-details/path/'+url;
+          }
+          else if(type === "TraceModel"){
+            // TODO Compelte with model page
+            return;
+          }
+          else if(type === "StoredTrace" || type === "ComputedTrace"){
+            path += 'trace-details/path/'+url;
+          }
+          else if(type=== "Method"){
+            path += 'method-details/path/'+url;
+          }
+          else{
+            return;
+          }
+          window.open('#'+path);
+        },
+
         /**
          * `#homeBtn` on-click function.
          *
@@ -509,8 +579,8 @@
                 this.$['trace-details-container'].refresh();
               } else if (page === 'method-details') {
                 // TODO
-                // this.$['method-details'].methodUrl = this.ktbsUrl + this._getResourceUrl(tail);
-                // this.$['method-details'].refresh();
+                this.$['method-details'].methodUrl = this.ktbsUrl + this._getResourceUrl(tail);
+                this.$['method-details'].refresh();
               }
             }
             window.scrollTo(0, 0);

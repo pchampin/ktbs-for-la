@@ -1,6 +1,7 @@
-<!-- LOCAL STYLESHEET -->
+<!-- Css -->
 <link rel="import" href="./css/ktbs-for-la-style.html">
-<!-- POLYMER APP HELPERS -->
+<link rel="import" href="../taaabs-themes/taaabs-theme.html">
+<!-- App tools -->
 <link rel="import" href="../app-layout/app-layout.html">
 <link rel="import" href="../app-route/app-route.html">
 <link rel="import" href="../app-route/app-location.html">
@@ -13,43 +14,37 @@
 <link rel="import" href="../iron-icon/iron-icon.html">
 <link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<!-- Paper elements -->
 <link rel="import" href="../paper-dialog/paper-dialog.html">
-<!-- BASE -->
-<link rel="import" href="../taaabs-base-overview/taaabs-base-overview.html">
-<link rel="import" href="../taaabs-base-details/taaabs-base-details.html">
-<link rel="import" href="../taaabs-base-graph/taaabs-base-graph.html">
-<link rel="import" href="../taaabs-base-create/taaabs-base-create.html">
-<link rel="import" href="../taaabs-research/taaabs-research.html">
-<!-- TODO : METHOD -->
-<link rel="import" href="../taaabs-method-details/taaabs-method-details.html">
-<!-- TRACE -->
-<!-- TODO CHANGE DEPENDECY HERE -->
-<link rel="import" href="../taaabs-trace-details-container/taaabs-trace-details-container.html">
-<link rel="import" href="../taaabs-trace-timeline-docker/taaabs-trace-timeline-docker.html">
-<!-- COLLECTOR -->
-<link rel="import" href="../taaabs-csv-collector/taaabs-csv-collector.html">
-<!-- REQUESTS -->
-<link rel="import" href="../../elements/taaabs-spare/taaabs-spare.html">
-<!-- TAAABS -->
+<!-- TAAABS Essential -->
 <link rel="import" href="../taaabs-taaabs/taaabs-taaabs.html">
-<link rel="import" href="../taaabs-resource-loader/taaabs-resource-loader.html">
-<link rel="import" href="./css/ktbs-for-la-style.html">
-<link rel="import" href="../taaabs-themes/taaabs-theme.html">
-<link rel="import" href="../notify-toast-behavior/notify-toast-behavior.html">
-<!-- POLYMER -->
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../taaabs-research/taaabs-research.html">
+
 <!-- ENOUGH WITH THE DEPENDENCIES !! -->
 <dom-module id="ktbs-for-la">
-  <template>
+  <template strip-whitespace>
+
+    <!-- CSS -->
     <style include="taaabs-theme"></style>
     <style include="ktbs-for-la-style"></style>
 
     <!-- ROUTING COMPONENT -->
-    <app-location route="{{_route}}" use-hash-as-path></app-location>
+    <app-location id="app-location" route="{{_route}}" use-hash-as-path></app-location>
     <app-route route="[[_route]]" pattern="/page/:page" data="{{_routePage}}" tail="{{_tail}}">
     </app-route>
 
+    <!-- RESEARCH DIALOG -->
+    <paper-dialog id="research-dialog">
+      <div class="flex-vertical">
+        <taaabs-research id="research" style="width: 1000px; min-height: 400px" ktbs-url="[[ktbsUrl]]" language="[[language]]"></taaabs-research>
+        <div class="flex-horizontal flex-equal-around-justified">
+          <paper-button class="fgWhite bgLog bgLogH hoverable" raised on-click="_onExploreHereClick">Explore here <iron-icon icon="icons:open-in-new"></iron-icon></paper-button>
+          <paper-button class="fgWhite bgLog bgLogH hoverable" raised on-click="_onExploreNewWindowClick">Explore in new window <iron-icon icon="icons:open-in-browser"></iron-icon></paper-button>
+        </div>
+      </div>
+    </paper-dialog>
 
+    <!-- CONTENT -->
     <app-drawer-layout force-narrow>
 
 
@@ -90,101 +85,32 @@
         </app-toolbar>
       </app-header>
 
-      <paper-dialog id="research-dialog">
-        <div class="flex-vertical">
-          <taaabs-research id="research" style="width: 1000px; min-height: 400px" ktbs-url="[[ktbsUrl]]" language="[[language]]"></taaabs-research>
-          <div class="flex-horizontal flex-equal-around-justified">
-            <paper-button class="fgWhite bgLog bgLogH hoverable" raised on-click="_onExploreHereClick">Explore here <iron-icon icon="icons:open-in-new"></iron-icon></paper-button>
-            <paper-button class="fgWhite bgLog bgLogH hoverable" raised on-click="_onExploreNewWindowClick">Explore in new window <iron-icon icon="icons:open-in-browser"></iron-icon></paper-button>
+      <!-- HOME PAGE -->
+      <div id="home" class="page flex-vertical">
+        <div id="banner" class="flexchild flex-vertical flex-center-align">
+          <div class="flex-vertical flexchild  flex-equal-around-justified">
+            <div class="flex-horizontal flex-equal-around-justify fit-width">
+              <div>
+                <center><h2>KTBS 4 LA</h2></center>
+                <p>{{localize('welcome')}}</p>
+              </div>
+            </div>
+          </div>
+          <div id="href-progress-div" class="fit-width fgWhite">
+            [[_loadingElem]] <span style="float:right">[[_loadingCount]]%</span>
+            <div style="width: 100%; height: 10px; background-color: rgba(255,255,255,0.37)">
+              <div id="href-progress-bar" style="width: 0%; height: 10px; background-color: rgba(255,255,255,0.87)"></div>
+            </div>
           </div>
         </div>
-      </paper-dialog>
+        <div id="base-list" class="centered swag-scroll">
+          <h3>[[localize('pickAProject')]]</h3>
+        </div>
+      </div>
 
-      <!-- Notify toast -->
-      <paper-toast id="__notify_toast__" style="background-color:rgba(0,0,0,0.37)" duration=0> </paper-toast>
+      <!-- REAL CONTENT -->
+      <div id="page-target" class="page"></div>
 
-      <!-- SECTIONS -->
-      <iron-pages attr-for-selected="data-route" selected="[[_routePage.page]]">
-
-        <!-- HOME PAGE -->
-        <section class="page" data-route="home">
-          <div id="home" class="flexchild-vertical">
-            <div>
-              <div>
-                <center>
-                  <h2>KTBS 4 LA</h2>
-                  <p>{{localize('welcome')}}</p>
-                </center>
-              </div>
-            </div>
-          </div>
-          <div id="base-list" class="centered swag-scroll">
-            <h2> {{localize('pickAProject')}} </h2>
-            <taaabs-resource-loader resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
-              <taaabs-base-overview id="tbo" ktbs-url="{{ktbsUrl}}" language="[[language]]" taaabs-central-loading>
-              </taaabs-base-overview>
-            </taaabs-resource-loader>
-          </div>
-        </section>
-
-        <!-- TAAABS CSV COLLECTOR -->
-        <section class="page" data-route="csv-collector">
-          <div>
-            <taaabs-resource-loader resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
-              <taaabs-csv-collector id="tcc" language="[[language]]" taaabs-central-loading></taaabs-csv-collector>
-            </taaabs-resource-loader>
-          </div>
-        </section>
-
-
-        <!-- TAAABS BASE DETAILS -->
-        <section class="page fit-width flex-vertical" data-route="base-details">
-          <div>
-            <iron-collapse id="baseGraphCollapse" opened>
-              <taaabs-resource-loader resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
-                <taaabs-base-graph id="tbg" taaabs-central-loading height="300px" bg-color="#2e3842" language="[[language]]">
-                </taaabs-base-graph>
-              </taaabs-resource-loader>
-            </iron-collapse>
-            <div class="fit-width bgDarkBlue" style="padding:2px; text-align: center">
-              <iron-icon id="baseGraphIcon" class="clickable hoverable fgWhite fgWhiteH" icon="icons:expand-less" on-click="_onToggleBaseGraph"> </iron-icon>
-            </div>
-            <div id="base-details-icons" class="fit-width bgDarkBlue">
-              <div class="centered flex-horizontal flex-equal-around-justified">
-                <div class="fgWhite fgWhiteH hoverable clickable">
-                  <iron-icon class="fgWhiteH hoverable" icon="icons:file-upload" title="{{localize('importcsv')}}" on-click="_onImportCSVClicked"></iron-icon>
-                </div>
-                <div class="fgWhite fgWhiteH hoverable clickable" on-click='_onCreateBaseClick'>
-                  <iron-icon class="fgWhiteH hoverable" icon="icons:add" style="vertical-align:baseline"></iron-icon>B </div>
-                <div class="fgWhite fgWhiteH hoverable clickable">
-                  <iron-icon class="fgWhiteH hoverable" icon="icons:add" style="vertical-align:baseline"></iron-icon>ST </div>
-                <div class="fgWhite fgWhiteH hoverable clickable">
-                  <iron-icon class="fgWhiteH hoverable" icon="icons:add" style="vertical-align:baseline"></iron-icon>CT </div>
-                <div class="fgWhite fgWhiteH hoverable clickable">
-                  <iron-icon class="fgWhiteH hoverable" icon="icons:add" style="vertical-align:baseline"></iron-icon>M </div>
-              </div>
-            </div>
-          </div>
-          <div style="padding-top: 5px;" class="centered swag-scroll flexchild">
-            <taaabs-resource-loader resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
-              <taaabs-base-details id="tbd" language="[[language]]" taaabs-central-loading>
-              </taaabs-base-details>
-            </taaabs-resource-loader>
-          </div>
-          <paper-dialog id="base-create-modal" style="min-width: 800px; padding:24px" no-cancel-on-esc-key no-cancel-on-outside-click>
-            <taaabs-resource-loader resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
-              <taaabs-base-create id="base-create" language="[[language]]" in-base  taaabs-central-loading></taaabs-base-create>
-            </taaabs-resource-loader>
-          </paper-dialog>
-        </section>
-
-        <!-- TAAABS TRACE DETAILS -->
-        <section class="page" data-route="trace-details">
-          <taaabs-resource-loader style="width: 100%; height: 100%" resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
-            <taaabs-trace-details-container id="trace-details-container" language="[[language]]" taaabs-central-loading>
-            </taaabs-trace-details-container>
-          </taaabs-resource-loader>
-        </section>
 
         <!-- WORK IN PROGRESS -->
         <!--
@@ -194,36 +120,31 @@
         </section>
        -->
 
-        <!-- TAAABS TRACE TIMELINE -->
-        <section class="page" data-route="trace-timeline">
-          <taaabs-trace-timeline-docker id="ttt" language="[[language]]"></taaabs-trace-timeline-docker>
-        </section>
-
         <!-- TAAABS METHOD DETAILS -->
-        <section class="page" data-route="method-details">
+        <!-- <section class="page" data-route="method-details">
           <taaabs-method-details id="method-details" language="[[language]]"></taaabs-method-details>
-        </section>
+        </section> -->
 
         <!-- TAAABS TRACE SPARE -->
-        <section class="page" data-route="spare">
+        <!-- <section class="page" data-route="spare">
           <div class="centered">
             <taaabs-resource-loader resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
               <taaabs-spare id="ts" taaabs-central-loading language="[[language]]">
               </taaabs-spare>
             </taaabs-resource-loader>
           </div>
-        </section>
-
-      </iron-pages>
+        </section> -->
 
     </app-drawer-layout>
   </template>
   <script>
     (function() {
-      'use strict';
       Polymer({
         is: 'ktbs-for-la',
         properties: {
+
+          /** ============================================================== **/
+          /**  PUBLIC PROPERTIES                                             **/
 
           /**
            * Url of the ktbs we're working with.
@@ -249,10 +170,6 @@
             value: ""
           },
 
-          //////////
-          // I18N //
-          //////////
-
           /**
            * Localization.
            * fr, en.
@@ -266,9 +183,42 @@
             value: 'fr'
           },
 
-          /////////////
-          // ROUTING //
-          /////////////
+          /**
+           * Liste of all the dependencies to import if necessary.
+           *
+           * @attribute hrefResources
+           * @type Array
+           */
+          hrefResources: {
+            type: Array,
+            value: function(){
+              return [
+                "../notify-toast-behavior/notify-toast-behavior.html",
+                "../taaabs-taaabs/taaabs-taaabs.html",
+                "../../elements/taaabs-spare/taaabs-spare.html",
+                "../taaabs-trace-timeline-docker/taaabs-trace-timeline-docker.html",
+                "../taaabs-method-details/taaabs-method-details.html",
+                "../taaabs-base-overview/taaabs-base-overview.html",
+                "./kfl-base-details.html",
+                "./kfl-trace-details.html",
+                "./kfl-csv-collector.html"
+              ];
+            }
+          },
+
+          /**
+           * Length of `hrefResources`.
+           *
+           * @attribute hrefResourcesLength
+           * @type Number
+           */
+          hrefResourcesLength: {
+            type: Number,
+            value: 9
+          },
+
+          /** ============================================================== **/
+          /**  PRIVATE PROPERTIES                                            **/
 
           /**
            * First part of the route.
@@ -294,144 +244,499 @@
           },
 
           /**
-           * The datas of `_route`, according to the pattern '/:page/:resourceurl'.
+           * The tail of the route.
            *
-           * @attribute _routeDatas
+           * @attribute _tail
            * @type Object
            */
-          _routeDatas: {
+          _tail: {
             type: Object,
             notify: true,
           },
 
           /**
-           * An object containing the rest of the page datas.
+           * List of all the dependencies to import.
            *
-           * @attribute _routeTails
-           * @type Object
+           * @attribute _hrefBuffer
+           * @type Array
            */
-          _routeTails: {
-            type: Object,
-            notify: true,
+          _hrefBuffer: {
+            type: Array,
+            value: []
           }
-
         },
-        observers: [
-          '_onRoutePathChanged(_routePage)'
-        ],
-        behaviors: [
-          Polymer.AppLocalizeBehavior,
-          NotifyToastBehavior
-        ],
-        ready: function() {},
 
+        observers: [
+          '_onRouteChanged(_route.path)',
+          '_onLanguageChanged(language)'
+        ],
+
+        behaviors: [
+          Polymer.AppLocalizeBehavior
+        ],
+
+        /** ================================================================ **/
+        /**  INITIALIZATION                                                  **/
+
+        /**
+         * .
+         *
+         * @method ready
+         */
+        ready: function(){},
+
+        /**
+         * .
+         *
+         * @method attached
+         */
         attached: function() {
           // Load i18n json.
           this.loadResources(this.resolveUrl('./languages/locales.json'));
-
-          // Set event listener for taaabs-base-overview component.
-          this.$.tbo.addEventListener('BASE_SELECTED', function(e) {
-            console.log(e);
-            if (e.detail.which !== 2) {
-              this.set('_route.path', '/page/base-details/path/' + e.detail.baseId);
-            } else {
-              window.open('#/page/base-details/path/' + e.detail.baseId);
-            }
-          }.bind(this));
-
-          //Set event listener for taaabs-base-graph
-          this.$.tbg.addEventListener('REFRESHED', function() {
-            this.$.tbd.refresh();
-          }.bind(this));
-
-          // Set event listerner for taaabs-base-details component.
-          this.$.tbd.addEventListener('RESOURCE_SELECTED', function(e) {
-
-            // this.$.baseDetailsModal.open();
-            // .resource
-            if (e.detail.resource['@type'] === "StoredTrace" || e.detail.resource['@type'] === "ComputedTrace") {
-              if (e.detail.which !== 2) {
-                // Get the path to the base
-                var url = "";
-                // Get the path to the base
-                var url = "";
-                var source_url = e.detail.resource.uri.replace(this.ktbsUrl, '');
-                url = 'path/' + source_url;
-                // Set the enw route
-                this.set('_route.path', '/page/trace-details/' + url);
-              } else {
-                window.open('#/page/trace-details/' + url);
-              }
-            } else if (e.detail.resource['@type'] === "Base") {
-              if (e.detail.which !== 2) {
-                // Get the path to the base
-                var url = "";
-                var source_url = e.detail.resource.uri.replace(this.ktbsUrl, '');
-                url = 'path/' + source_url;
-                // Set the enw route
-                this.set('_route.path', '/page/base-details/' + url);
-              } else {
-                window.open('#/page/base-details/' + url);
-              }
-            } else if (e.detail.resource['@type'] === "Method") {
-              if (e.detail.which !== 2) {
-                // Get the path to the base
-                var url = "";
-                var source_url = e.detail.resource.uri.replace(this.ktbsUrl, '');
-                url = 'path/' + source_url;
-                // Set the enw route
-                this.set('_route.path', '/page/method-details/' + url);
-              } else {
-                window.open('#/page/method-details/' + url);
-              }
-            }
-
-          }.bind(this));
-
-          this.$.tbd.addEventListener('RESOURCE_CHANGED', function() {
-            this.$.tbg.refresh();
-          }.bind(this));
-
-          this.$['base-create'].addEventListener('base-creation-canceled', function(){
-            this.$['base-create-modal'].close();
-          }.bind(this));
-
-          this.$['base-create'].addEventListener('base-created', function(evt){
-            this.$['base-create-modal'].close();
-            var msg = this.localize('base-creation-success-1') + evt.detail.base_path + this.localize('base-creation-success-2');
-            this.notifyToast(msg,{
-              type: "Success",
-              timeout: -1
-            });
-            this.$.tbg.refresh();
-          }.bind(this));
-
-          this.$['trace-details-container'].addEventListener('timeline-link-clicked', function(){
-            window.open('#/page/trace-timeline' + this._tail.path);
-          }.bind(this))
-
         },
 
-        //////////////////////////////
-        // USER INTERFACE FUNCTIONS //
-        //////////////////////////////
+        /** ================================================================ **/
+        /**  ROUTE / I18N                                                    **/
 
-        _onCreateBaseClick: function(){
-          var tail = "";
-          if (this._tail.path) {
-            tail = this._tail.path.split(/\/\b/g);
-            if (tail[0] === "") tail.splice(0, 1);
+        /**
+         * `#homeBtn` on-click function.
+         *
+         * @method _home
+         */
+        _home: function() {
+          this.set('_route.path', '/page/home/');
+        },
+
+        /**
+         * .
+         *
+         * @method _onRouteChanged
+         */
+        _onRouteChanged: function(route){
+          if(this._routePage === undefined){
+            setTimeout(function(){
+                this.set('_route.path', '/page/home/');
+                this._onRouteChanged();
+            }.bind(this), 100);
           }
-          this.$['base-create'].set('baseRelativeUrl', this._getResourceUrl(tail));
-          this.$['base-create'].set('baseUrl', this.ktbsUrl + this._getResourceUrl(tail));
-          this.$['base-create'].refresh();
-          this.$['base-create-modal'].open();
+          else{
+            var page = this._routePage.page;
+            switch(page){
+              case 'home':
+                this._loadHome();
+              break;
+              case 'base-details':
+                this._loadBaseDetails();
+              break;
+              case 'trace-details':
+                this._loadTraceDetails();
+              break;
+              case 'trace-timeline':
+                this._loadTraceTimeline();
+              break;
+              case 'csv-collector':
+                this._loadCsvCollector();
+              break;
+              case 'method-details':
+                this._loadMethodDetails();
+              break;
+            }
+          }
         },
 
+        /**
+         * Returns an url from the route.
+         */
+        _getResourceUrl: function(array) {
+          var url = "";
+          var resources = ["path"];
+          var i = 0;
+          while (i < array.length) {
+            if (array[i] !== "path" && array[i] !== "")
+              url += array[i] + '/';
+            i++;
+          }
+          // Remove last '/' if it's unecessary
+          if(array[array.length - 1] !== "") url = url.slice(0, -1);
+          return url;
+        },
+
+        /**
+         * .
+         *
+         * @method _onLanguageChanged
+         */
+        _onLanguageChanged: function(language){
+          var elem = this._getCurrentElement();
+          if(elem) elem.set('language', language);
+        },
+
+        /** ================================================================ **/
+        /**  DOM MANAGING                                                    **/
+
+        /**
+         * `#drawerBtn` on-click function.
+         *
+         * @method _toggleDrawer
+         */
+        _toggleDrawer: function() {
+          this.$.drawer.toggle();
+        },
+
+        /**
+         * "Import csv" button on-click function.
+         *
+         * @method _onImportCSVClicked
+         */
+        _onImportCSVClicked: function() {
+          var tail = this._tail.path;
+          this.set('_route.path', '/page/csv-collector' + tail);
+        },
+
+        /**
+         * .
+         *
+         * @method _getCurrentElement
+         */
+        _getCurrentElement: function(){
+          return (this.$['page-target'].children.length > 0) ? this.$['page-target'].children[0] : null;
+        },
+
+        /**
+         * .
+         *
+         * @method _showhome
+         */
+        _showHome: function(){
+          this.$.home.style.display = 'flex';
+          this.$['page-target'].style.display = 'none';
+        },
+
+        /**
+         * .
+         *
+         * @method _hideHome
+         */
+        _hideHome: function(){
+          this.$.home.style.display = 'none';
+          this.$['page-target'].style.display = 'flex';
+        },
+
+        /** ================================================================ **/
+        /**  IMPORT RESOURCES                                                **/
+
+        /**
+         * .
+         *
+         * @method _isHrefLoaded
+         */
+        _isHrefLoaded: function(list){
+          var l = [];
+          var i = 0;
+          var j = 0;
+          var m = this.hrefResources.length;
+          while(i < m){
+            j = 0;
+            while(j < list.length){
+              if(list[j] === this.hrefResources[i]){
+                l.push(this.hrefResources[i]);
+                this.splice('hrefResources', i , 1);
+                m--;
+                i--;
+                j = list.length;
+              }
+              j++;
+            }
+            i++;
+          }
+          if(l.length > 0){
+            this.set('_hrefBuffer', l);
+            return false;
+          }
+          return true;
+        },
+
+        /**
+         * .
+         *
+         * @method importResources
+         */
+        importResources: function(callback, resources){
+          resources = resources || this.get('hrefResources');
+          if(this._hrefBuffer.length > 0){
+            var endOfLoading = (this._hrefBuffer.length === 1);
+            var res = this.pop('_hrefBuffer');
+            this.set('_loadingElem', res);
+            this.importHref(this.resolveUrl(res),
+             function(evt){
+              var count = Math.floor( (this.hrefResourcesLength - this._hrefBuffer.length) / this.hrefResourcesLength * 100);
+              this.$['href-progress-bar'].style.width = count+'%';
+              this.set('_loadingCount', count);
+              if(endOfLoading){
+                this.set('_loadingElem', "Loading complete");
+                callback();
+              }
+              else this.importResources(callback);
+            }.bind(this),
+             function(evt){
+               console.log('error');
+               console.log(evt);
+             }, true);
+          }
+          else if(resources.length === 0){
+            callback();
+          }
+          else{
+            this._isHrefLoaded(resources);
+            this.importResources(callback);
+          }
+        },
+
+        /** ================================================================ **/
+        /**   HOME                                                           **/
+
+        /**
+         * .
+         *
+         * @method _loadHome
+         */
+        _loadHome: function(){
+          this._showHome();
+          function callback(){
+            // Create the `taaabs-base-overwview` element and launch it.
+            var bl = document.createElement('taaabs-base-overview');
+            bl.set('ktbsUrl', this.ktbsUrl);
+            bl.set('language', this.language);
+            bl.style.padding = 0;
+            bl.style.paddingBottom = '24px';
+            if(this.$['base-list'].children.length > 1) this.$['base-list'].removeChild( this.$['base-list'].children[1]);
+            this.$['base-list'].appendChild(bl);
+            bl.refresh();
+            // listen to `base-selected`.
+            bl.addEventListener('base-selected', function(e) {
+              if (e.detail.where === "here") {
+                this.set('_route.path', '/page/base-details/path/' + e.detail.baseId);
+              } else {
+                window.open('#/page/base-details/path/' + e.detail.baseId);
+              }
+            }.bind(this));
+          }
+          this.importResources(callback.bind(this));
+        },
+
+        /** ================================================================ **/
+        /**  BASE DETAILS                                                    **/
+
+        /**
+         * .
+         *
+         * @method _loadBaseDetails
+         */
+        _loadBaseDetails: function(){
+          if( this.hrefResources.indexOf('./kfl-base-details.html') === -1){
+            this._hideHome();
+            if(this.$['page-target'].children.length > 0) this.$['page-target'].removeChild(this.$['page-target'].children[0]);
+
+            var baseUrl =  this.ktbsUrl + this._getResourceUrl(this._tail.path.split('/'));
+            var bd = document.createElement('kfl-base-details');
+            bd.classList.add('fit-width');
+            bd.set('baseUrl', baseUrl);
+            // Set the listeners
+            bd.addEventListener('resource-selected'     , this._baseDetailsResourceSelected.bind(this));
+            bd.addEventListener('base-creation-canceled', this._baseDetailsBaseCreationCanceled.bind(bd));
+            bd.addEventListener('base-created'          , this._baseDetailsBaseCreated.bind(bd));
+            bd.addEventListener('resource-changed'      , this._baseDetailsResourceChanged.bind(bd));
+            this.$['page-target'].appendChild(bd);
+            bd.refresh();
+          }
+          else{
+            this.importResources(this._loadBaseDetails.bind(this), ['./kfl-base-details.html']);
+          }
+        },
+
+        /**
+         * .
+         *
+         * @method _baseDetailsResourceSelected
+         */
+        _baseDetailsResourceSelected: function(e){
+          // Get the path to the base
+          var source_url = e.detail.resource.uri.replace(this.ktbsUrl, '');
+          var url = 'path/' + source_url;
+          var page = "/page/";
+          if (e.detail.resource['@type'] === "StoredTrace" || e.detail.resource['@type'] === "ComputedTrace") {
+            page += 'trace-details/';
+          } else if (e.detail.resource['@type'] === "Base") {
+            page += 'base-details/';
+          } else if (e.detail.resource['@type'] === "Method") {
+            page += 'method-details/';
+          }
+          if (e.detail.where === 'here') {
+            this.set('_route.path', page + url);
+          } else {
+            window.open('#' + page + url);
+          }
+        },
+
+        /**
+         * TODO Create func inside bd.
+         *
+         * @method _baseDetailsBaseCreationCanceled
+         */
+        _baseDetailsBaseCreationCanceled: function(){
+          this.$['base-create-modal'].close();
+        },
+
+        /**
+         * TODO Create func inside bd.
+         *
+         * @method _baseDetailsBaseCreated
+         */
+        _baseDetailsBaseCreated: function(){
+          this.$['base-create-modal'].close();
+          this.refresh();
+        },
+
+        /**
+         *
+         *
+         * @method _baseDetailsResourceChanged
+         */
+        _baseDetailsResourceChanged: function(){
+          this.refresh();
+        },
+
+        /** ================================================================ **/
+        /**  TRACE DETAILS                                                   **/
+
+        /**
+         * .
+         *
+         * @method _loadTraceDetails
+         */
+        _loadTraceDetails: function() {
+          if( this.hrefResources.indexOf('./kfl-trace-details.html') === -1){
+            this._hideHome();
+            if(this.$['page-target'].children.length > 0){
+              console.log('on nettoie');
+              var elem = this.$['page-target'].children[0];
+              elem.clear();
+              Polymer.dom(this.$['page-target']).removeChild(elem);
+              Polymer.dom.flush();
+            }
+
+            var traceUrl =  this.ktbsUrl + this._getResourceUrl(this._tail.path.split('/'));
+
+            var td = document.createElement('kfl-trace-details');
+            td.classList.add('fit-width');
+            td.set('traceUrl', traceUrl);
+            td.addEventListener('timeline-link-clicked', function(){
+              window.open('#/page/trace-timeline' + this._tail.path);
+            }.bind(this))
+            this.$['page-target'].appendChild(td);
+            td.refresh();
+          }
+          else{
+            this.importResources(this._loadTraceDetails.bind(this), ['./kfl-trace-details.html']);
+          }
+        },
+
+        /** ================================================================ **/
+        /**  TRACE TIMELINE                                                  **/
+
+        /**
+         * .
+         *
+         * @method _loadTraceTimeline
+         */
+        _loadTraceTimeline: function(){
+          if( this.hrefResources.indexOf('../taaabs-trace-timeline-docker/taaabs-trace-timeline-docker.html') === -1){
+            this._hideHome();
+            if(this.$['page-target'].children.length > 0) this.$['page-target'].removeChild(this.$['page-target'].children[0]);
+
+            var traceUrl =  this.ktbsUrl + this._getResourceUrl(this._tail.path.split('/'));
+
+            var tt = new TAAABS.TraceTimelineDocker();
+            tt.classList.add('fit-width');
+            tt.set('traceUrl', traceUrl);
+            Polymer.dom(this.$['page-target']).appendChild(tt);
+            tt.refresh();
+          }
+          else{
+            this.importResources(this._loadTraceTimeline.bind(this), ['../taaabs-trace-timeline-docker/taaabs-trace-timeline-docker.html', '../taaabs-taaabs/taaabs-taaabs.html']);
+          }
+        },
+
+        /** ================================================================ **/
+        /**  CSV COLLECTOR                                                   **/
+
+        /**
+         * .
+         *
+         * @method _loadCsvCollector
+         */
+        _loadCsvCollector: function(){
+          if( this.hrefResources.indexOf('./kfl-csv-collector.html') === -1){
+            this._hideHome();
+            if(this.$['page-target'].children.length > 0) this.$['page-target'].removeChild(this.$['page-target'].children[0]);
+
+            var baseUrl =  this.ktbsUrl + this._getResourceUrl(this._tail.path.split('/'));
+
+            var cc = document.createElement('kfl-csv-collector');
+            cc.classList.add('fit-width');
+            cc.set('baseUrl', baseUrl);
+            Polymer.dom(this.$['page-target']).appendChild(cc);
+            cc.refresh();
+          }
+          else{
+            this.importResources(this._loadCsvCollector.bind(this), ['./kfl-csv-collector.html']);
+          }
+        },
+
+        /** ================================================================ **/
+        /**  METHOD DETAILS                                                  **/
+
+        /**
+         * .
+         *
+         * @method _loadMethodDetails
+         */
+        _loadMethodDetails: function(){
+          if( this.hrefResources.indexOf('../taaabs-method-details/taaabs-method-details.html') === -1){
+            this._hideHome();
+            if(this.$['page-target'].children.length > 0) this.$['page-target'].removeChild(this.$['page-target'].children[0]);
+
+            var methodUrl =  this.ktbsUrl + this._getResourceUrl(this._tail.path.split('/'));
+
+            var md = new TAAABS.MethodDetails();
+            md.classList.add('fit-width', 'swag-scroll');
+            md.set('methodUrl', methodUrl);
+            Polymer.dom(this.$['page-target']).appendChild(md);
+            md.refresh();
+          }
+          else{
+            this.importResources(this._loadMethodDetails.bind(this), ['../taaabs-method-details/taaabs-method-details.html']);
+          }
+
+        },
+
+        /** ================================================================ **/
+        /**  SEARCH                                                          **/
+
+        /**
+         * .
+         *
+         * @method _onSearchClick
+         */
         _onSearchClick: function(){
           this.$['research-dialog'].open();
         },
 
+        /**
+         * .
+         *
+         * @method _onExploreHereClick
+         */
         _onExploreHereClick: function(){
           var url = this.$.research.get('resourceUrl');
           url.replace(this.ktbsUrl, '');
@@ -458,6 +763,11 @@
           this.$.drawer.toggle();
         },
 
+        /**
+         * .
+         *
+         * @method _onExploreNewWindowClick
+         */
         _onExploreNewWindowClick: function(){
           var url = this.$.research.get('resourceUrl');
           url.replace(this.ktbsUrl, '');
@@ -482,133 +792,6 @@
           window.open('#'+path);
         },
 
-        /**
-         * `#homeBtn` on-click function.
-         *
-         * @method _home
-         */
-        _home: function() {
-          this.set('_route.path', '/page/home/');
-        },
-
-        /**
-         * `#drawerBtn` on-click function.
-         *
-         * @method _toggleDrawer
-         */
-        _toggleDrawer: function() {
-          this.$.drawer.toggle();
-        },
-
-        /**
-         * "Import csv" button on-click function.
-         *
-         * @method _onImportCSVClicked
-         */
-        _onImportCSVClicked: function() {
-          var tail = this._tail.path;
-          this.set('_route.path', '/page/csv-collector' + tail);
-        },
-
-        ///////////////////////
-        // ROUTING FUNCTIONS //
-        ///////////////////////
-
-        /**
-         * Returns an url from the route.
-         */
-        _getResourceUrl: function(array) {
-          var url = "";
-          var resources = ["path"];
-          var i = 0;
-          while (i < array.length) {
-            if (array[i] !== "path")
-              url += array[i] + '/';
-            i++;
-          }
-          url = url.substring(0, url.length - 1);
-          return url;
-        },
-
-        /**
-         * `_route.path` observer function.
-         *
-         * @param {!required} path {String} '_route.path'.
-         *
-         * @method _onRoutePathChanged
-         */
-        _onRoutePathChanged: function(path) {
-
-          // Delay the route function
-          this.async(function() {
-            var page = path.page;
-            if (this._tail.path) {
-              var tail = this._tail.path.split(/\/\b/g);
-              if (tail[0] === "") tail.splice(0, 1);
-            }
-
-            if (!page || page === '') {
-              this.set('_route.path', '/page/home/');
-            }
-
-            if(this._tail.path !== this._lastPath || page !== this._lastPage){
-
-              this.set('_lastPath', this._tail.path);
-              this.set('_lastPage', page);
-
-              if (!page || page === '') {
-                this.set('_route.path', '/page/home/');
-              } else if (page === 'home') {
-                this.$.tbo.refresh();
-              } else if (page === 'base-details') {
-                this.$.tbg.baseUrl = this.$.tbd.baseUrl = this.ktbsUrl + this._getResourceUrl(tail);
-                this.$.tbg.refresh();
-              } else if (page === 'base-overview') {
-                this.$.tbo.refresh();
-              } else if (page === 'trace-timeline') {
-                this.$.ttt.set('traceUrl', this.ktbsUrl + this._getResourceUrl(tail));
-                this.$.ttt.refresh();
-              } else if (page === 'spare') {
-                this.$.ts.set('traceUrl', this.ktbsUrl + this._getResourceUrl(tail));
-                this.$.ts.refresh();
-              } else if (page === 'csv-collector') {
-                this.$.tcc.baseUrl = this.ktbsUrl + this._getResourceUrl(tail);
-                this.$.tcc.refresh();
-              } else if (page === 'trace-details') {
-                this.$['trace-details-container'].traceUrl = this.ktbsUrl + this._getResourceUrl(tail);
-                this.$['trace-details-container'].refresh();
-              } else if (page === 'method-details') {
-                // TODO
-                this.$['method-details'].methodUrl = this.ktbsUrl + this._getResourceUrl(tail);
-                this.$['method-details'].refresh();
-              }
-            }
-            window.scrollTo(0, 0);
-          }, 150);
-
-          // If we do not have an initial URL, we redirect to /home/
-
-        },
-
-        /**
-         * Decode an encoded URL. Called by components as taaabs-base-details.
-         *
-         * @param {!required} url {String} An encoded URL.
-         *
-         * @method _decodeUrl
-         */
-        _decodeUrl: function(url) {
-          return decodeURIComponent(url);
-        },
-
-        /**
-         * BASE-DETAILS VIEW FUNCTIONS
-         **/
-
-        _onToggleBaseGraph: function() {
-          (this.$.baseGraphCollapse.opened) ? this.$.baseGraphIcon.set('icon', 'icons:expand-more'): this.$.baseGraphIcon.set('icon', 'icons:expand-less');
-          this.$.baseGraphCollapse.toggle();
-        }
       });
     })();
   </script>

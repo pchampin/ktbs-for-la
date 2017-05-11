@@ -1,0 +1,133 @@
+<link rel="import" href="./css/ktbs-for-la-style.html">
+<link rel="import" href="../taaabs-themes/taaabs-theme.html">
+
+<link rel="import" href="../app-localize-behavior/app-localize-behavior.html">
+<link rel="import" href="../iron-collapse/iron-collapse.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../taaabs-taaabs/taaabs-taaabs.html">
+<link rel="import" href="../taaabs-themes/taaabs-theme.html">
+<link rel="import" href="../taaabs-resource-loader/taaabs-resource-loader.html">
+<link rel="import" href="../taaabs-base-graph/taaabs-base-graph.html">
+<link rel="import" href="../taaabs-base-details/taaabs-base-details.html">
+<link rel="import" href="../taaabs-base-create/taaabs-base-create.html">
+
+<dom-module id="kfl-base-details">
+  <template>
+    <style include="taaabs-theme"></style>
+    <style>
+      :host {
+        padding: 0px;
+        padding-bottom: 24px;
+      }
+    </style>
+    <div class='fit-width fit-height flex-vertical'>
+      <div class="fit-width">
+        <iron-collapse id="baseGraphCollapse" opened>
+          <taaabs-resource-loader resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
+            <taaabs-base-graph id="base-graph" base-url="[[baseUrl]]" taaabs-central-loading height="300px" bg-color="#2e3842" language="[[language]]">
+            </taaabs-base-graph>
+          </taaabs-resource-loader>
+        </iron-collapse>
+        <div class="fit-width bgDarkBlue" style="padding:2px; text-align: center">
+          <iron-icon id="baseGraphIcon" class="clickable hoverable fgWhite fgWhiteH" icon="icons:expand-less" on-click="_onToggleBaseGraph"> </iron-icon>
+        </div>
+        <div id="base-details-icons" class="fit-width bgDarkBlue">
+          <div style="width: 1000px; margin: 0 auto;" class="flex-horizontal flex-equal-justified">
+            <div class="fgWhite fgWhiteH hoverable clickable">
+              <iron-icon class="fgWhiteH hoverable" icon="icons:file-upload" title="{{localize('importcsv')}}" on-click="_onImportCSVClicked"></iron-icon>
+            </div>
+            <div class="fgWhite fgWhiteH hoverable clickable" title="[[localize('create-base')]]" on-click='_onCreateBaseClick'>
+              <iron-icon class="fgWhiteH hoverable" icon="icons:add" style="vertical-align:baseline"></iron-icon>B </div>
+            <div class="fgWhite fgWhiteH fade">
+              <iron-icon class="fgWhiteH hoverable" icon="icons:add" style="vertical-align:baseline"></iron-icon>ST </div>
+            <div class="fgWhite fgWhiteH fade">
+              <iron-icon class="fgWhiteH hoverable" icon="icons:add" style="vertical-align:baseline"></iron-icon>CT </div>
+            <div class="fgWhite fgWhiteH fade">
+              <iron-icon class="fgWhiteH hoverable" icon="icons:add" style="vertical-align:baseline"></iron-icon>M </div>
+          </div>
+        </div>
+      </div>
+      <div class="flexchild flex-vertical">
+        <div style="display:flex; height: 100%; padding-bottom: 24px" class="fit-width flex-horizontal flex-equal-around-justified">
+          <taaabs-resource-loader style="display:block; height: 100%" resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
+            <taaabs-base-details  class="flex-vetical fit-height swag-scroll" style="padding: 0px; width: 1000px;"
+                                  id="base-details" base-url="[[baseUrl]]" language="[[language]]" taaabs-central-loading>
+            </taaabs-base-details>
+          </taaabs-resource-loader>
+        </div>
+      </div>
+    </div>
+    <paper-dialog id="base-create-modal" style="min-width: 800px; padding:24px" no-cancel-on-esc-key no-cancel-on-outside-click>
+      <taaabs-resource-loader resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
+        <taaabs-base-create id="base-create" language="[[language]]" in-base  taaabs-central-loading></taaabs-base-create>
+      </taaabs-resource-loader>
+    </paper-dialog>
+  </template>
+  <script>
+    Polymer({
+      is: 'kfl-base-details',
+
+      properties: {
+
+        /**
+         * Url of the base.
+         *
+         * @attribute baseUrl
+         * @type String
+         */
+        baseUrl: {
+         type: String,
+        },
+
+        /**
+         * i18n.
+         *
+         * @attribute language
+         * @type String
+         */
+        language: {
+         type: String,
+         value: 'fr'
+        }
+      },
+
+      behaviors: [
+        Polymer.AppLocalizeBehavior
+      ],
+
+      attached: function(){
+        // Load i18n json.
+        this.loadResources(this.resolveUrl('./languages/locales.json'));
+        this.$['base-graph'].addEventListener('refreshed', function(evt) {
+          evt.stopPropagation();
+          this.$['base-details'].refresh();
+        }.bind(this));
+      },
+
+      refresh: function(){
+        this.$['base-graph'].refresh();
+      },
+
+      clear: function(){
+        // TODO Clear here
+      },
+
+      _onCreateBaseClick: function(){
+        this.$['base-create'].set('baseRelativeUrl', this.baseUrl);
+        this.$['base-create'].set('baseUrl', this.baseUrl);
+        this.$['base-create'].refresh();
+        this.$['base-create-modal'].open();
+      },
+
+      _onToggleBaseGraph: function() {
+        (this.$.baseGraphCollapse.opened) ? this.$.baseGraphIcon.set('icon', 'icons:expand-more'): this.$.baseGraphIcon.set('icon', 'icons:expand-less');
+        this.$.baseGraphCollapse.toggle();
+      }
+
+
+
+    });
+  </script>
+</dom-module>

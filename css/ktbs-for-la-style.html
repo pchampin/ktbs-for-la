@@ -19,13 +19,22 @@
         left: 10px;
         top: 10px;
         height: 30px;
+        color: white;
       }
 
       :host #drawerBtn {
         position: absolute;
         right: 10px;
         top: 5px;
-        height: 30px
+        height: 30px;
+        color: white;
+      }
+
+      :host #href-progress-div{
+      }
+
+      :host #href-progress-bar{
+        transition: width ease-in-out 0.5s;
       }
 
       /* ///// */
@@ -47,15 +56,11 @@
       /* HOME */
       /* //// */
 
-      :host #home {
+      :host #banner {
         background-image: url('../images/banner.png');
+        min-height: 40vh;
         height: 60vh;
-      }
-
-      :host #home > div{
-        @apply(--layout-vertical);
-        @apply(--layout-center-justified);
-        height: 100%;
+        max-height: 60vh;
       }
 
       :host #base-list {
@@ -63,7 +68,7 @@
         padding-left: 10px;
       }
 
-      :host #home a:link,
+      :host #banner a:link,
       a:visited,
       a:hover,
       a:active {
@@ -72,10 +77,9 @@
         outline: 0;
       }
 
-      :host #home h2 {
+      :host #banner h2 {
         width: 200px;
         height: 40px;
-        margin-left: 100px;
         color: white;
         border-top: solid 3px white;
         border-bottom: solid 3px white;
@@ -83,9 +87,13 @@
         opacity: 0.87;
       }
 
-      :host #home p {
+      :host #banner p {
         color: rgba(255, 255, 255, 0.87);
         padding-top: 10px;
+      }
+
+      :host #page-target{
+        display: none;
       }
 
       /* ////// */

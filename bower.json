@@ -1,6 +1,6 @@
 {
   "name": "ktbs-for-la",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A web app using some `taaabs` components. It helps learning analysts work with a ktbs. See http://tbs-platform.org/tbs/doku.php/tools:ktbs",
   "keywords": [
     "web-components",

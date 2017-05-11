@@ -1,0 +1,62 @@
+<link rel="import" href="./css/ktbs-for-la-style.html">
+<link rel="import" href="../taaabs-themes/taaabs-theme.html">
+
+<link rel="import" href="../app-localize-behavior/app-localize-behavior.html">
+<link rel="import" href="../taaabs-taaabs/taaabs-taaabs.html">
+<link rel="import" href="../taaabs-resource-loader/taaabs-resource-loader.html">
+<link rel="import" href="../taaabs-csv-collector/taaabs-csv-collector.html">
+
+<dom-module id="kfl-csv-collector">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <taaabs-resource-loader resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
+      <taaabs-csv-collector id="csv-collector" language="[[language]]" baseUrl="[[baseUrl]]" taaabs-central-loading></taaabs-csv-collector>
+    </taaabs-resource-loader>
+  </template>
+  <script>
+    Polymer({
+      is: 'kfl-csv-collector',
+
+      properties: {
+
+        /**
+         * Url of the base.
+         *
+         * @attribute baseUrl
+         * @type String
+         */
+        baseUrl: {
+         type: String,
+        },
+
+        /**
+         * i18n.
+         *
+         * @attribute language
+         * @type String
+         */
+        language: {
+         type: String,
+         value: 'fr'
+        }
+      },
+
+      behaviors: [
+        Polymer.AppLocalizeBehavior
+      ],
+
+      attached: function(){
+        // Load i18n json.
+        this.loadResources(this.resolveUrl('./languages/locales.json'));
+      },
+
+      refresh: function(){
+        this.$['csv-collector'].refresh();
+      }
+    });
+  </script>
+</dom-module>

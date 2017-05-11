@@ -1,4 +1,4 @@
-{
+  {
     "en": {
         "welcome": "A brand new way to analyse your Technology Enhanced Learning traces, using a kernel for Trace Based System.",
         "projects": "Projects",
@@ -8,7 +8,8 @@
         "help": "Help",
         "pickAProject": "Pick your project",
         "base-creation-success-1": "The new ktbs base was successfully created. Click <a href=\"#/page/base-details/path/",
-        "base-creation-success-2": " target=\"_blank\">here</a> to inspect the new base."
+        "base-creation-success-2": " target=\"_blank\">here</a> to inspect the new base.",
+        "create-base": "Create a new base here"
     },
     "fr": {
         "welcome": "Une toute nouvelle façon d'analyser vos traces d'EIAH , par l 'intermédiaire d'un système à base de traces.",
@@ -19,6 +20,7 @@
         "help": "Aide",
         "pickAProject": "Selectionnez votre project",
         "base-creation-success-1": "La nouvelle base ktbs vient d'être créée. Clickez <a href=\"#/page/base-details/path/",
-        "base-creation-success-2": "\" target=\"_blank\">ici</a> pour visualiser la nouvelle base."
+        "base-creation-success-2": "\" target=\"_blank\">ici</a> pour visualiser la nouvelle base.",
+        "create-base": "Créer une nouvelle base ici"
     }
 }

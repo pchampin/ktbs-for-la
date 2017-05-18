@@ -104,6 +104,7 @@
           evt.stopPropagation();
           this.$['base-details'].refresh();
         }.bind(this));
+        this.$['base-details'].set('builtinMethods', ['filter']);
       },
 
       refresh: function(){

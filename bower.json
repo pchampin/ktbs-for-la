@@ -31,6 +31,7 @@
     "taaabs-base-overview": "TaaabsElements/taaabs-base-overview",
     "taaabs-base-details": "TaaabsElements/taaabs-base-details",
     "taaabs-base-graph": "TaaabsElements/taaabs-base-graph",
+    "taaabs-method-details": "TaaabsElements/taaabs-method-details",
     "taaabs-themes": "TaaabsElements/taaabs-themes",
     "taaabs-resource-loader": "TaaabsElements/taaabs-resource-loader",
     "i18n-panel": "Yepikae/i18n-panel",

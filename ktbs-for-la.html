@@ -30,7 +30,8 @@
 
     <!-- ROUTING COMPONENT -->
     <app-location id="app-location" route="{{_route}}" use-hash-as-path></app-location>
-    <app-route route="[[_route]]" pattern="/page/:page" data="{{_routePage}}" tail="{{_tail}}">
+    <app-route route="[[_route]]" pattern="/page/:page"   data="{{_routePage}}"    tail="{{_tail}}">
+    <app-route route="[[_tail]]" pattern="/:resourceType" data="{{_resourceType}}" tail="{{_resourcePathTail}}">
     </app-route>
 
     <!-- RESEARCH DIALOG -->
@@ -139,6 +140,9 @@
   </template>
   <script>
     (function() {
+
+      //TODO: Graph dans la recherche de resource
+
       Polymer({
         is: 'ktbs-for-la',
         properties: {
@@ -193,8 +197,8 @@
             type: Array,
             value: function(){
               return [
-                "../notify-toast-behavior/notify-toast-behavior.html",
                 "../taaabs-taaabs/taaabs-taaabs.html",
+                "../notify-toast-behavior/notify-toast-behavior.html",
                 "../../elements/taaabs-spare/taaabs-spare.html",
                 "../taaabs-trace-timeline-docker/taaabs-trace-timeline-docker.html",
                 "../taaabs-method-details/taaabs-method-details.html",
@@ -346,19 +350,18 @@
 
         /**
          * Returns an url from the route.
+         *
+         * @method _getResourceUrl
          */
-        _getResourceUrl: function(array) {
-          var url = "";
-          var resources = ["path"];
-          var i = 0;
-          while (i < array.length) {
-            if (array[i] !== "path" && array[i] !== "")
-              url += array[i] + '/';
-            i++;
+        _getResourceUrl: function() {
+          // Get the type of path and the tail.
+          var type = this._resourceType.resourceType;
+          var path = this._resourcePathTail.path;
+          // Return either an absolute Url or the ktbs url + the resource relative url.
+          if     (type === 'url') return path.replace('/','');
+          else if(type === 'path'){
+            return this.ktbsUrl + path.replace('/', '');
           }
-          // Remove last '/' if it's unecessary
-          if(array[array.length - 1] !== "") url = url.slice(0, -1);
-          return url;
         },
 
         /**
@@ -537,10 +540,11 @@
             this._hideHome();
             if(this.$['page-target'].children.length > 0) this.$['page-target'].removeChild(this.$['page-target'].children[0]);
 
-            var baseUrl =  this.ktbsUrl + this._getResourceUrl(this._tail.path.split('/'));
+            var baseUrl = this._getResourceUrl();
             var bd = document.createElement('kfl-base-details');
             bd.classList.add('fit-width');
             bd.set('baseUrl', baseUrl);
+
             // Set the listeners
             bd.addEventListener('resource-selected'     , this._baseDetailsResourceSelected.bind(this));
             bd.addEventListener('base-creation-canceled', this._baseDetailsBaseCreationCanceled.bind(bd));
@@ -561,9 +565,15 @@
          */
         _baseDetailsResourceSelected: function(e){
           // Get the path to the base
-          var source_url = e.detail.resource.uri.replace(this.ktbsUrl, '');
-          var url = 'path/' + source_url;
+          var source_url = e.detail.resource.uri;
           var page = "/page/";
+          var prefix = "url/";
+          if(source_url.search(this.ktbsUrl) !== -1){
+            source_url = source_url.replace(this.ktbsUrl, '');
+            prefix = "path/";
+          }
+
+          var url = prefix + source_url;
           if (e.detail.resource['@type'] === "StoredTrace" || e.detail.resource['@type'] === "ComputedTrace") {
             page += 'trace-details/';
           } else if (e.detail.resource['@type'] === "Base") {
@@ -625,13 +635,13 @@
               Polymer.dom.flush();
             }
 
-            var traceUrl =  this.ktbsUrl + this._getResourceUrl(this._tail.path.split('/'));
+            var traceUrl = this._getResourceUrl();
 
             var td = document.createElement('kfl-trace-details');
             td.classList.add('fit-width');
             td.set('traceUrl', traceUrl);
             td.addEventListener('timeline-link-clicked', function(){
-              window.open('#/page/trace-timeline' + this._tail.path);
+              window.open('#/page/trace-timeline' + this._resourcePathTail.path);
             }.bind(this))
             this.$['page-target'].appendChild(td);
             td.refresh();
@@ -654,7 +664,7 @@
             this._hideHome();
             if(this.$['page-target'].children.length > 0) this.$['page-target'].removeChild(this.$['page-target'].children[0]);
 
-            var traceUrl =  this.ktbsUrl + this._getResourceUrl(this._tail.path.split('/'));
+            var traceUrl = this._getResourceUrl();
 
             var tt = new TAAABS.TraceTimelineDocker();
             tt.classList.add('fit-width');
@@ -680,7 +690,7 @@
             this._hideHome();
             if(this.$['page-target'].children.length > 0) this.$['page-target'].removeChild(this.$['page-target'].children[0]);
 
-            var baseUrl =  this.ktbsUrl + this._getResourceUrl(this._tail.path.split('/'));
+            var baseUrl = this._getResourceUrl();
 
             var cc = document.createElement('kfl-csv-collector');
             cc.classList.add('fit-width');
@@ -706,11 +716,12 @@
             this._hideHome();
             if(this.$['page-target'].children.length > 0) this.$['page-target'].removeChild(this.$['page-target'].children[0]);
 
-            var methodUrl =  this.ktbsUrl + this._getResourceUrl(this._tail.path.split('/'));
+            var methodUrl = this._getResourceUrl();
 
             var md = new TAAABS.MethodDetails();
             md.classList.add('fit-width', 'swag-scroll');
             md.set('methodUrl', methodUrl);
+            md.set('ktbsUrl', this.ktbsUrl);
             Polymer.dom(this.$['page-target']).appendChild(md);
             md.refresh();
           }

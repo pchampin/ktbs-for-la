@@ -641,7 +641,7 @@
             td.classList.add('fit-width');
             td.set('traceUrl', traceUrl);
             td.addEventListener('timeline-link-clicked', function(){
-              window.open('#/page/trace-timeline' + this._resourcePathTail.path);
+              window.open('#/page/trace-timeline/path' + this._resourcePathTail.path);
             }.bind(this))
             this.$['page-target'].appendChild(td);
             td.refresh();

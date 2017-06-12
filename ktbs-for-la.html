@@ -22,6 +22,7 @@
 
 <!-- ENOUGH WITH THE DEPENDENCIES !! -->
 <dom-module id="ktbs-for-la">
+  <!-- Remove the white spaces between html nodes -->
   <template strip-whitespace>
 
     <!-- CSS -->
@@ -141,7 +142,18 @@
   <script>
     (function() {
 
-      //TODO: Graph dans la recherche de resource
+      //# ktbs-for-la
+      //
+      //`<ktbs-for-la>` is a web app using some `taaabs` components. It helps learning analysts work with a ktbs.
+      //
+      // Example:
+      //
+      //     <ktbs-for-la ktbs-url="https://YOUR_KTBS_URL/"></ktbs-for-la>
+      //
+      // Source files: <a href="https://github.com/TaaabsElements/ktbs-for-la" target="_blank">ktbs-for-la</a>
+      // 
+      //TODO Graph in resource search.
+      //TODO I18N The research dialog.
 
       Polymer({
         is: 'ktbs-for-la',
@@ -199,7 +211,6 @@
               return [
                 "../taaabs-taaabs/taaabs-taaabs.html",
                 "../notify-toast-behavior/notify-toast-behavior.html",
-                "../../elements/taaabs-spare/taaabs-spare.html",
                 "../taaabs-trace-timeline-docker/taaabs-trace-timeline-docker.html",
                 "../taaabs-method-details/taaabs-method-details.html",
                 "../taaabs-base-overview/taaabs-base-overview.html",
@@ -218,7 +229,7 @@
            */
           hrefResourcesLength: {
             type: Number,
-            value: 9
+            value: 8
           },
 
           /** ============================================================== **/

@@ -20,9 +20,9 @@
 <link rel="import" href="../taaabs-taaabs/taaabs-taaabs.html">
 <link rel="import" href="../taaabs-research/taaabs-research.html">
 <!-- ktf elements -->
-<link rel="import" href="./kfl-base-details.html">
 <link rel="import" href="./kfl-csv-collector.html">
 <link rel="import" href="./kfl-trace-details.html">
+<link rel="import" href="./kfl-base-details.html">
 <!--
 # ktbs-for-la
 
@@ -57,7 +57,6 @@ Source files: <a href="https://github.com/TaaabsElements/ktbs-for-la" target="_b
  - Put an interactive resource graph in resource search.
  - Set the I18N in resource search dialog.
 -->
-<dom-modul
 <dom-module id="ktbs-for-la">
   <!-- Remove the white spaces between html nodes -->
   <template strip-whitespace>
@@ -366,10 +365,8 @@ Source files: <a href="https://github.com/TaaabsElements/ktbs-for-la" target="_b
          * @method _onLanguageChanged
          */
         _onLanguageChanged: function(language){
-          try {
-            var elem = this._getCurrentElement();
-            if(elem) elem.set('language', language);
-          } catch (e) {}
+          var elem = this._getCurrentElement();
+          if(elem) elem.set('language', language);
         },
 
         /** ================================================================ **/

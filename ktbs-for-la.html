@@ -19,8 +19,45 @@
 <!-- TAAABS Essential -->
 <link rel="import" href="../taaabs-taaabs/taaabs-taaabs.html">
 <link rel="import" href="../taaabs-research/taaabs-research.html">
+<!-- ktf elements -->
+<link rel="import" href="./kfl-base-details.html">
+<link rel="import" href="./kfl-csv-collector.html">
+<link rel="import" href="./kfl-trace-details.html">
+<!--
+# ktbs-for-la
 
-<!-- ENOUGH WITH THE DEPENDENCIES !! -->
+`<ktbs-for-la>` is a web app using some `taaabs` components. It helps learning analysts work with a ktbs.
+
+### Routes
+
+Routes are made of two parts: the `page` and the `resource uri`.
+ - List of existing pages
+  + /page/home
+  + /page/base-details
+  + /page/trace-details
+  + /page/trace-timeline
+  + /page/csv-collector
+  + /page/method-details
+ - List of resources uris
+  + `path/relative/uri/resource`
+  + `uri/http://some.absolute.resource/uri`
+
+A relative resource uri is relative to the `ktbsUrl` (see properties). Here's some route example:
+ - https://your.ktbs.url.com/#/page/base-details/path/baseTestRemi/
+ - https://your.ktbs.url.com/#/page/method-details/uri/http://liris.cnrs.fr/silex/2009/ktbs#filter
+
+
+### Example
+
+     <ktbs-for-la ktbs-url="https://your.ktbs.url.com/"></ktbs-for-la>
+
+Source files: <a href="https://github.com/TaaabsElements/ktbs-for-la" target="_blank">ktbs-for-la</a>
+
+### TODO LIST
+ - Put an interactive resource graph in resource search.
+ - Set the I18N in resource search dialog.
+-->
+<dom-modul
 <dom-module id="ktbs-for-la">
   <!-- Remove the white spaces between html nodes -->
   <template strip-whitespace>
@@ -113,48 +150,10 @@
       <!-- REAL CONTENT -->
       <div id="page-target" class="page"></div>
 
-
-        <!-- WORK IN PROGRESS -->
-        <!--
-        <section class="page" data-route="generic-method-from-trace">
-          <taaabs-generic-method id="tgmFT" from-trace="{{_decodeUrl(_routeDatas.resourceurl)}}" language="[[language]]">
-          </taaabs-generic-method>
-        </section>
-       -->
-
-        <!-- TAAABS METHOD DETAILS -->
-        <!-- <section class="page" data-route="method-details">
-          <taaabs-method-details id="method-details" language="[[language]]"></taaabs-method-details>
-        </section> -->
-
-        <!-- TAAABS TRACE SPARE -->
-        <!-- <section class="page" data-route="spare">
-          <div class="centered">
-            <taaabs-resource-loader resources={{shared_resources}} is-loading={{shared_loading_resources_status}} loading-list={{shared_loading_resources}}>
-              <taaabs-spare id="ts" taaabs-central-loading language="[[language]]">
-              </taaabs-spare>
-            </taaabs-resource-loader>
-          </div>
-        </section> -->
-
     </app-drawer-layout>
   </template>
   <script>
     (function() {
-
-      //# ktbs-for-la
-      //
-      //`<ktbs-for-la>` is a web app using some `taaabs` components. It helps learning analysts work with a ktbs.
-      //
-      // Example:
-      //
-      //     <ktbs-for-la ktbs-url="https://YOUR_KTBS_URL/"></ktbs-for-la>
-      //
-      // Source files: <a href="https://github.com/TaaabsElements/ktbs-for-la" target="_blank">ktbs-for-la</a>
-      // 
-      //TODO Graph in resource search.
-      //TODO I18N The research dialog.
-
       Polymer({
         is: 'ktbs-for-la',
         properties: {
@@ -163,27 +162,13 @@
           /**  PUBLIC PROPERTIES                                             **/
 
           /**
-           * Url of the ktbs we're working with.
+           * Url of the ktbs.
            *
            * @attribute ktbsUrl
            * @type String
            */
           ktbsUrl: {
-            type: String,
-            notify: true,
-            value: ""
-          },
-
-          /**
-           * Url of the current base if there's one.
-           *
-           * @attribute _baseUrl
-           * @type String
-           */
-          _baseUrl: {
-            type: String,
-            notify: true,
-            value: ""
+            type: String
           },
 
           /**
@@ -200,7 +185,7 @@
           },
 
           /**
-           * Liste of all the dependencies to import if necessary.
+           * List of all the dependencies to import when necessary.
            *
            * @attribute hrefResources
            * @type Array

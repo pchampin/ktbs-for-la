@@ -366,8 +366,10 @@ Source files: <a href="https://github.com/TaaabsElements/ktbs-for-la" target="_b
          * @method _onLanguageChanged
          */
         _onLanguageChanged: function(language){
-          var elem = this._getCurrentElement();
-          if(elem) elem.set('language', language);
+          try {
+            var elem = this._getCurrentElement();
+            if(elem) elem.set('language', language);
+          } catch (e) {}
         },
 
         /** ================================================================ **/

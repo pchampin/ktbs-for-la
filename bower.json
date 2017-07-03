@@ -27,6 +27,7 @@
     "app-localize-behavior"         : "PolymerElements/app-localize-behavior#<2.*",
     "app-route"                     : "PolymerElements/app-route#<2.*",
     "paper-dialog"                  : "PolymerElements/paper-dialog#<2.*",
+    "taaabs-base-create"            : "TaaabsElements/taaabs-base-create",
     "taaabs-base-details"           : "TaaabsElements/taaabs-base-details",
     "taaabs-base-graph"             : "TaaabsElements/taaabs-base-graph",
     "taaabs-base-overview"          : "TaaabsElements/taaabs-base-overview",

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!-- EXAMPLE HTML FILE USING ktbs-for-la -->
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+  <!-- INIT POLYMER -->
+  <script>
+    window.Polymer = window.Polymer || {};
+    window.Polymer.dom = 'shadow';
+  </script>
+
+  <!-- import a component that relies on Polymer -->
+  <link rel="import" href="bower_components/polymer/polymer.html">
+  <link rel="import" href="bower_components/ktbs-for-la/ktbs-for-la.html">
+
+  <!-- Moar css -->
+  <style>
+    body{
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <ktbs-for-la ktbs-url="PUT THE URL OF YOUR KTBS HERE"></ktbs-for-la>
+  <!-- IMPORTANT: unless ktbs4la and ktbs have the same Origin,
+       you need to ensure that your ktbs has the CORS headers activated -->
+</body>
+</html>
